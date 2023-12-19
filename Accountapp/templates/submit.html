@@ -1,0 +1,328 @@
+<!-- your_template.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Data Table</title>
+    {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      html {
+        background-color: #f2f2f2 !important;
+      }
+      body {
+        background-color: #f2f2f2 !important;
+      }
+      .main-card {
+        background-color: #fcfcfc !important;
+      }
+      
+      .edit-button {
+        font-size: 1rem;
+      }
+      
+      .edit-button.disabled {
+        color: #999 !important; /* or any color that indicates a disabled state */
+        cursor: not-allowed;
+        pointer-events: none;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
+      <!-- Main wrapper -->
+      <div class="body-wrapper">
+        <header class="app-header">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="search-bar">
+              <label for="searchInput">Search:</label>
+              <input type="text" id="searchInput" class="search-input" oninput="searchTable()" placeholder="" />
+              <input type="date" id="dateInput" oninput="searchTabledate()" />
+              <input type="date" id="endDate" onchange="searchTabledate()" />
+            </div>
+          </nav>
+        </header>
+        <div class="container-fluid mt-4">
+          <div class="container-fluid">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Head</th>
+                        <th>Sub Head</th>
+                        {% comment %} <th>Description</th> {% endcomment %}
+                        <th>Receipt Number</th>
+                        <th>Charge By</th>
+                        <th>Voucher</th>
+                        {% comment %} <th>Paid By</th> {% endcomment %}
+                        {% comment %} <th>Claim By</th> {% endcomment %}
+                        <th>Instrument</th>
+                        {% comment %} <th>Comments</th> {% endcomment %}
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for entry in accounting_form %}
+                        <tr data-toggle="collapse" data-target="#row{{ entry.id }}" class="accordion-toggle">
+                          <td>{{ entry.date }}</td>
+                          <td>{{ entry.amount }}</td>
+                          <td>{{ entry.head.name }}</td>
+                          <td>{{ entry.sub_head }}</td>
+                          {% comment %} <td>{{ entry.description }}</td> {% endcomment %}
+                          <td>{{ entry.receipt_number }}</td>
+                          <td>{{ entry.charge_by.name }}</td>
+                          <td>{{ entry.voucher }}</td>
+                          {% comment %} <td>{{ entry.paid_by.name }}</td> {% endcomment %}
+                          {% comment %} <td>{{ entry.claim_by.name }}</td> {% endcomment %}
+                          {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
+                            <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
+                          {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
+                            <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
+                          {% else %}
+                            <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
+                          {% endif %}
+                          {% comment %} <td>{{ entry.comments }}</td> {% endcomment %}
+                          <td>
+                            {% if entry.date == today %}
+                              <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit"></i></a>
+                            {% else %}
+                              <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit"></i></span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="13" class="hiddenRow">
+                            <div class="accordian-body collapse" id="row{{ entry.id }}">
+                              {% comment %} <p>
+                                <strong>Head:</strong> {{ entry.head.name }}
+                              </p>
+                              <p>
+                                <strong>Sub Head:</strong> {{ entry.sub_head }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Description:</strong> {{ entry.description }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Receipt Number:</strong> {{ entry.receipt_number }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Charge By:</strong> {{ entry.charge_by.name }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Voucher:</strong> {{ entry.voucher }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Paid By:</strong> {{ entry.paid_by.name }}
+                              </p>
+                              <p>
+                                <strong>Claim By:</strong> {{ entry.claim_by.name }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Instrument:</strong> {{ entry.instrument }}-{% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
+                                  {{ entry.cash_number }}
+                                {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
+                                  {{ entry.cheque_number }}
+                                {% else %}
+                                  {{ entry.online_number }}
+                                {% endif %}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Comments:</strong> {{ entry.comments }}
+                              </p>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <button onclick="downloadTable()" class="btn btn-primary mt-3">Download CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function downloadTable() {
+        const table = document.getElementById('accounting-table')
+        const rows = table.querySelectorAll('tr')
+        let csvContent = 'data:text/csv;charset=utf-8,'
+      
+        rows.forEach((row) => {
+          const cells = row.querySelectorAll('td, th')
+          const rowData = Array.from(cells).map((cell) => cell.textContent)
+          csvContent += rowData.join(',') + '\n'
+        })
+      
+        const encodedUri = encodeURI(csvContent)
+        const link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', 'accounting_entries.csv')
+        document.body.appendChild(link)
+        link.click()
+      }
+      
+      function searchTable() {
+        var input, filter, table, tr, td, i, txtValue
+        input = document.getElementById('searchInput')
+        filter = input.value.toUpperCase()
+        table = document.getElementById('accounting-table')
+        tr = table.getElementsByTagName('tr')
+      
+        for (i = 0; i < tr.length; i++) {
+          // Assuming the first column contains the date, the sixth column contains the receipt number,
+          // and the eighth column contains the voucher number
+          var dateTd = tr[i].getElementsByTagName('td')[0]
+          var receiptTd = tr[i].getElementsByTagName('td')[5]
+          var voucherTd = tr[i].getElementsByTagName('td')[7]
+      
+          if (filter === '') {
+            // If the search input is empty, display all rows
+            tr[i].style.display = ''
+          } else {
+            if (dateTd && receiptTd && voucherTd) {
+              var dateValue = dateTd.textContent || dateTd.innerText
+              var receiptValue = receiptTd.textContent || receiptTd.innerText
+              var voucherValue = voucherTd.textContent || voucherTd.innerText
+      
+              if (dateValue.toUpperCase().includes(filter) || receiptValue.toUpperCase().includes(filter) || voucherValue.toUpperCase().includes(filter)) {
+                tr[i].style.display = ''
+              } else {
+                tr[i].style.display = 'none'
+              }
+            }
+          }
+        }
+      }
+      
+      function searchTabledate() {
+        var startDateInput = document.getElementById('dateInput')
+        var endDateInput = document.getElementById('endDate')
+        var startFilter = new Date(startDateInput.value).toISOString()
+        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000).toISOString() // Add 24 hours to include the entire selected end date
+      
+        var table = document.getElementById('accounting-table')
+        var tr = table.getElementsByTagName('tr')
+      
+        for (var i = 0; i < tr.length; i++) {
+          var dateTd = tr[i].getElementsByTagName('td')[0]
+      
+          if (dateTd) {
+            var dateValue = new Date(dateTd.textContent.trim()).toISOString()
+      
+            // Check if the date is within the selected range
+            if ((startFilter === '' || dateValue >= startFilter) && (endFilter === '' || dateValue <= endFilter)) {
+              tr[i].style.display = ''
+            } else {
+              tr[i].style.display = 'none'
+            }
+          }
+        }
+      }
+      
+      document.getElementById('dateInput').max = new Date().toISOString().split('T')[0]
+      function updateSearchInputWithDate() {
+        var dateInput = document.querySelector('input[type="date"]')
+        var searchInput = document.getElementById('searchInput')
+      
+        // Get the selected date from the input
+        var selectedDate = new Date(dateInput.value)
+      
+        // Set the time to midnight in UTC
+        selectedDate.setUTCHours(0, 0, 0, 0)
+      
+        // Format the date manually as "MMM. D, YYYY"
+        var months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.']
+        var formattedDate = months[selectedDate.getUTCMonth()] + ' ' + selectedDate.getUTCDate() + ', ' + selectedDate.getUTCFullYear()
+      
+        // Set the value of the search input to the formatted date
+        searchInput.value = formattedDate
+      
+        // Trigger the searchTable function to update the table based on the new search input
+        searchTable()
+      }
+      
+      function downloadTable() {
+        const table = document.getElementById('accounting-table')
+        const rows = table.querySelectorAll('tr')
+        let csvContent = 'data:text/csv;charset=utf-8,' + '\uFEFF' // Add BOM for Excel compatibility
+      
+        rows.forEach((row) => {
+          const cells = row.querySelectorAll('td, th')
+          const rowData = Array.from(cells).map((cell) => {
+            let content = cell.textContent.trim()
+      
+            // Wrap the content in double quotes if it contains a comma
+            if (content.includes(',')) {
+              content = `"${content}"`
+            }
+      
+            return content
+          })
+      
+          csvContent += rowData.join(',') + '\n'
+        })
+      
+        const encodedUri = encodeURI(csvContent)
+        const link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', 'accounting_entries.csv')
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
+      
+      function updateSearchInputWithDate() {
+        var startDateInput = document.getElementById('dateInput')
+        var endDateInput = document.getElementById('endDate')
+      
+        var startDate = new Date(startDateInput.value)
+        startDate.setUTCHours(0, 0, 0, 0)
+      
+        // Set the min attribute of the end date input to the selected start date
+        endDateInput.endD
+        min = startDate.toISOString().split('T')[0]
+      
+        // Trigger the searchTable function to update the table based on the new date range
+      
+        searchTable()
+      }
+      
+      function updateEndDate() {
+        // Get the selected start date from the input
+        var startDateInput = document.getElementById('dateInput')
+        var startDate = new Date(startDateInput.value)
+      
+        // Set the min attribute of the end date input to the selected start date
+        document.getElementById('endDate').min = startDate.toISOString().split('T')[0]
+      
+        // Trigger the searchTable function to update the table based on the new date range
+        searchTable()
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/app.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
+  </body>
+</html>

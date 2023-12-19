@@ -1,0 +1,91 @@
+/* Reset some default browser styles */
+:root {
+    --text: #4a2424;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+header {
+    padding: 20px;
+    text-align: left;
+    margin-left: 10%;
+    height: 10vh;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.container {
+    text-align: center;
+}
+
+.container h1 {
+    color: #fff;
+    position: relative;
+    bottom: 15vh;
+    font-size: 4em;
+}
+
+.buttons {
+    margin-right: 4%;
+    align-items: center;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    width: fit-content;
+    margin-left: 4%;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 25px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 1.2rem;
+    border: 2px solid transparent;
+    transition: 0.3s ease;
+    transition: all 0.3s ease-in-out;
+}
+
+.button:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+@media (max-width: 768px) {
+
+    .container h1 {
+        font-size: 2.7em;
+    }
+
+    .button {
+        font-size: 1rem;
+    }
+
+}

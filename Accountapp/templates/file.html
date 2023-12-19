@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Accounting Form</title>
+    {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <style>
+      html {
+        background-color: #f2f2f2 !important;
+      }
+      body {
+        background-color: #f2f2f2 !important;
+      }
+      .main-card {
+        background-color: #fcfcfc !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
+      <!-- Main wrapper -->
+      <div class="body-wrapper">
+        <div class="container-fluid mt-4">
+          <div class="container-fluid">
+            <div class="card">
+              <div class="card-body main-card">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h5 class="card-title fw-semibold mb-4">Accounting Form</h5>
+                    {% comment %} <p class="form-label text-primary">*Hover over the fields for more Information</p> {% endcomment %}
+                    <div class="card">
+                      <div class="card-body">
+                        <form action="{% url 'accounting' %}" method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="row">
+                            <div class="mb-3 col-md-6">
+                              <label for="amount" class="form-label">*Amount</label>
+                              <input type="text" class="form-control" id="amount" name="amount" placeholder="Please enter a valid amount" required />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="receiptNumber" class="form-label">*Receipt Number</label>
+                              <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid receipt number" required />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="head" class="form-label">*Head</label>
+                              <select id="head" name="head" class="form-select" required>
+                                {% for head_option in heads %}
+                                  <option class="form-control" value="{{ head_option.id }}">{{ head_option.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="subHead" class="form-label">*Sub Head</label>
+                              <select id="subHead" name="subHead" class="form-select" required>
+                                {% for subhead_option in subheads %}
+                                  <option class="form-control" value="{{ subhead_option.id }}">{{ subhead_option.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="chargeBy" class="form-label">*Charge By</label>
+                              <select id="chargeBy" name="chargeBy" class="form-select" required>
+                                {% for charge_option in charges %}
+                                  <option class="form-control" value="{{ charge_option.id }}">{{ charge_option.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="paidBy" class="form-label">*Paid By</label>
+                              <select id="paidBy" name="paidBy" class="form-select" required>
+                                {% for paid_option in paids %}
+                                  <option class="form-control" value="{{ paid_option.id }}">{{ paid_option.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="claimBy" class="form-label">*Claim By</label>
+                              <select id="claimBy" name="claimBy" class="form-select" required>
+                                {% for claim_option in claims %}
+                                  <option class="form-control" value="{{ claim_option.id }}">{{ claim_option.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="vendors" class="form-label">
+                                *Vendors
+                                <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-plus" style="font-size: 1.1rem;"></i></button>
+                              </label>
+
+                              <select id="vendors" name="vendors" class="form-select" required>
+                                {% for vendor_option in vendors %}
+                                  <option class="form-control" value="{{ vendor_option }}">{{ vendor_option }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="attachments" class="form-label" style="cursor: pointer;">Attachments</label>
+                              <input class="form-control" type="file" id="attachments" name="attachments" />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="instrument" class="form-label">*Instrument</label>
+                              <select id="instrument" name="instrument" class="form-select" onchange="toggleInstrumentFields()" required>
+                                <option class="form-control" value="">Select instrument</option>
+                                <option class="form-control" value="cash">Cash</option>
+                                <option class="form-control" value="cheque">Cheque</option>
+                                <option class="form-control" value="online">Online Transfer</option>
+                              </select>
+                            </div>
+
+                            <div id="cashFields" style="display: none;" class="mb-3 col-md-6">
+                              <label for="cashNumber" class="form-label">*Cash Number</label>
+                              <input type="text" id="cashNumber" name="cashNumber" class="form-control" />
+                            </div>
+
+                            <div id="chequeFields" style="display: none;" class="mb-3 col-md-6">
+                              <label for="chequeNumber" class="form-label">*Cheque Number</label>
+                              <input type="text" id="chequeNumber" name="chequeNumber" class="form-control" />
+                            </div>
+
+                            <div id="onlineFields" style="display: none;" class="mb-3 col-md-6">
+                              <label for="onlineNumber" class="form-label">*Online Transfer Number</label>
+                              <input type="text" id="onlineNumber" name="onlineNumber" class="form-control" />
+                            </div>
+
+                            <div id="hiddenField" style="display: none; visibility: hidden;" class="mb-3 col-md-6"></div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="description" class="form-label">Description</label>
+                              <textarea class="form-control" rows="4" id="description" name="description" placeholder="Please enter some description"></textarea>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                              <label for="comments" class="form-label">Comments</label>
+                              <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter some comments"></textarea>
+                            </div>
+                          </div>
+                          <button id="btn" type="submit" class="btn btn-primary mt-3">Submit</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function toggleInstrumentFields() {
+        var instrument = document.getElementById('instrument').value
+        var cashFields = document.getElementById('cashFields')
+        var chequeFields = document.getElementById('chequeFields')
+        var onlineFields = document.getElementById('onlineFields')
+        var hiddenField = document.getElementById('hiddenField')
+      
+        if (instrument === 'cash') {
+          cashFields.style.display = 'block'
+          chequeFields.style.display = 'none'
+          onlineFields.style.display = 'none'
+          hiddenField.style.display = 'block'
+        } else if (instrument === 'cheque') {
+          cashFields.style.display = 'none'
+          chequeFields.style.display = 'block'
+          onlineFields.style.display = 'none'
+          hiddenField.style.display = 'block'
+        } else if (instrument === 'online') {
+          cashFields.style.display = 'none'
+          chequeFields.style.display = 'none'
+          onlineFields.style.display = 'block'
+          hiddenField.style.display = 'block'
+        }
+      }
+      
+      function addVendor() {
+        var newVendor = prompt('Enter a new vendor:')
+      
+        if (newVendor) {
+          var vendorsDropdown = document.getElementById('vendors')
+      
+          // Check if the vendor already exists in the dropdown
+          var vendorExists = Array.from(vendorsDropdown.options).some(function (option) {
+            return option.value === newVendor
+          })
+      
+          if (!vendorExists) {
+            var option = document.createElement('option')
+            option.value = newVendor
+            option.text = newVendor
+            vendorsDropdown.add(option)
+          } else {
+            alert('Vendor already exists in the dropdown.')
+          }
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/app.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
+  </body>
+</html>
