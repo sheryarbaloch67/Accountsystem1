@@ -9,8 +9,6 @@
     {% load static %}
 
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -40,27 +38,6 @@
         pointer-events: none;
         text-decoration: none;
       }
-      
-      .hiddenDetails {
-        display: none;
-      }
-      
-      .my-navbar {
-        border-radius: 50px !important;
-      }
-      
-      .search-input {
-        max-width: 40%;
-        padding: 8px 16px;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #5a6a85;
-        border-radius: 50px;
-        background-color: transparent;
-        background-clip: padding-box;
-        border: var(--bs-border-width) solid #dfe5ef;
-      }
     </style>
   </head>
 
@@ -69,114 +46,122 @@
     <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
       <!-- Main wrapper -->
       <div class="body-wrapper">
-        <div class="container-fluid">
-          <div class="card my-navbar">
-            <div class="card-body">
-              <div class="search-bar">
-                <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" class="search-input" oninput="searchTable()" placeholder="" />
-                <label for="dateInput"><i class="ti ti-calendar"></i></label>
-                <input type="date" id="dateInput" oninput="searchTabledate()" class="mr-2" />
-                <label for="endDate"><i class="ti ti-calendar"></i></label>
-                <input type="date" id="endDate" onchange="searchTabledate()" />
-              </div>
+        <header class="app-header">
+          <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="search-bar">
+              <label for="searchInput">Search:</label>
+              <input type="text" id="searchInput" class="search-input" oninput="searchTable()" placeholder="" />
+              <input type="date" id="dateInput" oninput="searchTabledate()" />
+              <input type="date" id="endDate" onchange="searchTabledate()" />
             </div>
-          </div>
-        </div>
-        <div class="container-fluid">
-          <div class="card">
-            <div class="card-body">
-              <div class="table-responsive">
-                <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
-                  <thead class="text-dark fs-4 text-center">
-                    <tr>
-                      <th>Date</th>
-                      <th>Amount</th>
-                      <th>Head</th>
-                      <th>Sub Head</th>
-                      <th>Receipt Number</th>
-                      <th>Voucher</th>
-                      <th>Instrument</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for entry in accounting_form %}
-                      <tr class="text-center">
-                        <td>{{ entry.date }}</td>
-                        <td>{{ entry.amount }}</td>
-                        <td>{{ entry.head.name }}</td>
-                        <td>{{ entry.sub_head }}</td>
-                        <td>{{ entry.receipt_number }}</td>
-                        <td>{{ entry.voucher }}</td>
-                        {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
-                          <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
-                        {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
-                          <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
-                        {% else %}
-                          <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
-                        {% endif %}
-                        <td>
-                          <button class="text-primary accordion-toggle" data-target="#details{{ entry.id }}" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-layout-navbar-expand" style="font-size: 1.1rem;"></i></button>
-                          {% if entry.date == today %}
-                            <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit"></i></a>
+          </nav>
+        </header>
+        <div class="container-fluid mt-4">
+          <div class="container-fluid">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Head</th>
+                        <th>Sub Head</th>
+                        {% comment %} <th>Description</th> {% endcomment %}
+                        <th>Receipt Number</th>
+                        {% comment %} <th>Charge By</th> {% endcomment %}
+                        <th>Voucher</th>
+                        {% comment %} <th>Paid By</th> {% endcomment %}
+                        {% comment %} <th>Claim By</th> {% endcomment %}
+                        <th>Instrument</th>
+                        {% comment %} <th>Comments</th> {% endcomment %}
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for entry in accounting_form %}
+                        <tr data-toggle="collapse" data-target="#row{{ entry.id }}" class="accordion-toggle">
+                          <td>{{ entry.date }}</td>
+                          <td>{{ entry.amount }}</td>
+                          <td>{{ entry.head.name }}</td>
+                          <td>{{ entry.sub_head }}</td>
+                          {% comment %} <td>{{ entry.description }}</td> {% endcomment %}
+                          <td>{{ entry.receipt_number }}</td>
+                          {% comment %} <td>{{ entry.charge_by.name }}</td> {% endcomment %}
+                          <td>{{ entry.voucher }}</td>
+                          {% comment %} <td>{{ entry.paid_by.name }}</td> {% endcomment %}
+                          {% comment %} <td>{{ entry.claim_by.name }}</td> {% endcomment %}
+                          {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
+                            <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
+                          {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
+                            <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
                           {% else %}
-                            <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit"></i></span>
+                            <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
                           {% endif %}
-                        </td>
-                      </tr>
-                      <tr class="hiddenDetails text-left" id="details{{ entry.id }}">
-                        <td colspan="5" class="hiddenDetails-content text-left">
-                          <p>
-                            <strong>Description:</strong> {{ entry.description }}
-                          </p>
-                          <p>
-                            <strong>Charge By:</strong> {{ entry.charge_by.name }}
-                          </p>
-                          <p>
-                            <strong>Paid By:</strong> {{ entry.paid_by.name }}
-                          </p>
-                          <p>
-                            <strong>Claim By:</strong> {{ entry.claim_by.name }}
-                          </p>
-                          <p>
-                            <strong>Comments:</strong> {{ entry.comments }}
-                          </p>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                          {% comment %} <td>{{ entry.comments }}</td> {% endcomment %}
+                          <td>
+                            {% if entry.date == today %}
+                              <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit"></i></a>
+                            {% else %}
+                              <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit"></i></span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="13" class="hiddenRow">
+                            <div class="accordian-body collapse" id="row{{ entry.id }}">
+                              {% comment %} <p>
+                                <strong>Head:</strong> {{ entry.head.name }}
+                              </p>
+                              <p>
+                                <strong>Sub Head:</strong> {{ entry.sub_head }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Description:</strong> {{ entry.description }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Receipt Number:</strong> {{ entry.receipt_number }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Charge By:</strong> {{ entry.charge_by.name }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Voucher:</strong> {{ entry.voucher }}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Paid By:</strong> {{ entry.paid_by.name }}
+                              </p>
+                              <p>
+                                <strong>Claim By:</strong> {{ entry.claim_by.name }}
+                              </p>
+                              {% comment %} <p>
+                                <strong>Instrument:</strong> {{ entry.instrument }}-{% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
+                                  {{ entry.cash_number }}
+                                {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
+                                  {{ entry.cheque_number }}
+                                {% else %}
+                                  {{ entry.online_number }}
+                                {% endif %}
+                              </p> {% endcomment %}
+                              <p>
+                                <strong>Comments:</strong> {{ entry.comments }}
+                              </p>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <button onclick="downloadTable()" class="btn btn-primary mt-3">Download CSV</button>
               </div>
-              <button onclick="downloadTable()" class="btn btn-primary mt-3">Download CSV</button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <script>
-      //to hide and show the hiddenRow
-      $(document).ready(function () {
-        $('.accordion-toggle').click(function () {
-          // Get the target ID from the clicked element's data-target attribute
-          var targetId = $(this).data('target')
-      
-          // Toggle the collapse state of the target element
-          $(targetId).slideToggle()
-        })
-      })
-      document.addEventListener('DOMContentLoaded', function () {
-        // Add a click event listener to each accordion toggle
-        document.querySelectorAll('.accordion-toggle').forEach(function (toggle) {
-          toggle.addEventListener('click', function () {
-            // Get the target ID from the data-target attribute
-            var targetId = this.getAttribute('data-target')
-      
-            // Toggle the 'show' class on the target element
-            document.querySelector(targetId).classList.toggle('show')
-          })
-        })
-      })
       function downloadTable() {
         const table = document.getElementById('accounting-table')
         const rows = table.querySelectorAll('tr')
