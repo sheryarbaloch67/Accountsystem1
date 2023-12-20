@@ -3,10 +3,35 @@ from django.shortcuts import render, redirect
 from .models import AccountingEntry,Head,charge,paid,claim,Vendor,Shead
 from django.http import HttpResponse, HttpResponseNotFound
 from datetime import datetime, date
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+
 
 # Create your views here.
 
+def signin(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            # Log in the user
+            user = form.get_user()
+            login(request, user)
+            return redirect('submitfile')  # Replace 'dashboard' with the appropriate URL
+        else:
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
 
+@login_required(login_url='signin')
+def signout(request):
+    logout(request)
+    return redirect('signin')  # Replace 'signin' with the appropriate URL
+
+@login_required(login_url='signin')
 def home(request):
      heads = Head.objects.all()
      charges =charge.objects.all()
@@ -16,7 +41,8 @@ def home(request):
      subheads=Shead.objects.all()
      today = date.today()
      return render(request,"file.html",locals())
- 
+
+@login_required(login_url='signin')
 def accounting_form(request):
     if request.method == 'POST':
         head_id = request.POST.get('head')
@@ -115,7 +141,7 @@ def accounting_form(request):
 
     return render(request, 'submit.html')
 
-
+@login_required(login_url='signin')
 def edit(request,id):
     data=AccountingEntry.objects.get(id=id)
     heads = Head.objects.all()
@@ -126,7 +152,7 @@ def edit(request,id):
 
     return render(request,"editfile.html",locals())
 
-
+@login_required(login_url='signin')
 def ufile(request):
     if request.method == 'POST':
         entry_id = request.POST.get('userid')
@@ -161,11 +187,7 @@ def ufile(request):
 
     return render(request, 'submit.html')
 
-
-
-
-
-
+@login_required(login_url='signin')
 def showresult(request):
     accounting_form=AccountingEntry.objects.all()
     for i in accounting_form:
@@ -175,5 +197,3 @@ def showresult(request):
     # formatted_date = today.strftime("%b. %d, %Y")
     # print(today)
     return render(request,"submit.html",locals())
-
-

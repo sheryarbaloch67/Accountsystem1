@@ -35,7 +35,7 @@
       }
       
       .toggle-buttons {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
       }
       
       .edit-button.disabled {
@@ -65,6 +65,27 @@
         background-clip: padding-box;
         border: var(--bs-border-width) solid #dfe5ef;
       }
+      .date-input {
+        max-width: 9%;
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #5a6a85;
+        border-radius: 50px;
+        background-color: transparent;
+        background-clip: padding-box;
+        border: var(--bs-border-width) solid #dfe5ef;
+      }
+      @media (max-width: 600px) {
+        .date-input {
+          padding: 8px 13px;
+          max-width: 19%;
+        }
+        .search-input {
+          max-width: 22%;
+        }
+      }
     </style>
   </head>
 
@@ -75,14 +96,20 @@
       <div class="body-wrapper">
         <div class="container-fluid">
           <div class="card my-navbar">
-            <div class="card-body">
+            <div class="card-body d-flex justify-content-between">
               <div class="search-bar">
                 <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" class="search-input" oninput="searchTable()" placeholder="" />
-                <label for="dateInput"><i class="ti ti-calendar datelabel"></i></label>
-                <input type="date" id="dateInput" oninput="searchTabledate()" class="mr-2" />
-                <label for="endDate"><i class="ti ti-calendar datelabel"></i></label>
-                <input type="date" id="endDate" onchange="searchTabledate()" />
+                <input type="text" id="searchInput" class="search-input me-2" oninput="searchTable()" placeholder="" />
+                <input type="date" id="dateInput" oninput="searchTabledate()" class="date-input me-2" />
+                <input type="date" id="endDate" class="date-input" onchange="searchTabledate()" />
+              </div>
+              <div>
+                <a class="nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                  <div class="message-body">
+                    <a href="{% url 'signout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -171,16 +198,31 @@
                   </tbody>
                 </table>
               </div>
-              <div class="row">
-                <!-- Left column for the Download CSV button -->
-                <div class="col-md-6">
-                  <button onclick="downloadTable()" class="btn btn-primary mt-3"><i class="ti ti-download" style="font-size: 1.1rem;"></i> CSV</button>
-                </div>
-                <!-- Right column for the Load Previous and Next Rows buttons -->
-                <div class="col-md-6 d-flex justify-content-end">
-                  <div class="text-center mt-3">
-                    <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
-                    <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
+              <div class="container-fluid">
+                <div class="row d-flex align-items-center justify-content-between">
+                  <div class="col-md-6">
+                    <div class="d-flex justify-content-left align-items-center">
+                      <button onclick="downloadTable()" class="btn btn-outline-primary mt-3" style="font-size: 0.9rem;"><i class="ti ti-download" style="font-size: 1.1rem;"></i> CSV</button>
+                      <a href="{% url 'home' %}" class="btn btn-outline-primary mx-3 mt-3 d-block" style="font-size: 0.9rem;"><i class="ti ti-plus" style="font-size: 0.9rem;"></i> Row</a>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-end">
+                      <div class="text-center mt-3 me-2">
+                        {% comment %} <label for="recordsPerPage">Records Per Page:</label> {% endcomment %}
+                        <select id="recordsPerPage" class="form-select" onchange="updateTableRows()">
+                          <option value="10">10</option>
+                          <option value="20">20</option>
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                          <option value="all">All</option>
+                        </select>
+                      </div>
+                      <div class="text-center mt-3">
+                        <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
+                        <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -190,11 +232,24 @@
       </div>
     </div>
     <script>
+      //Debounce function
+      function debounce(func, delay) {
+        let timeout
+        return function () {
+          const context = this
+          const args = arguments
+          clearTimeout(timeout)
+          timeout = setTimeout(function () {
+            func.apply(context, args)
+          }, delay)
+        }
+      }
       //browse between 10 rows
       let startIndex = 0
-      const rowsPerPage = 10
+      let rowsPerPage = 10
       const loadPreviousButton = document.getElementById('loadPreviousButton')
       const loadNextButton = document.getElementById('loadNextButton')
+      const recordsPerPageSelect = document.getElementById('recordsPerPage')
       
       function loadPreviousRows() {
         startIndex = Math.max(0, startIndex - rowsPerPage) // Decrement the starting index by 10, but not below 0
@@ -207,6 +262,7 @@
       }
       
       function updateTableRows() {
+        rowsPerPage = recordsPerPageSelect.value === 'all' ? Number.MAX_SAFE_INTEGER : parseInt(recordsPerPageSelect.value, 10)
         const rows = document.querySelectorAll('#accounting-table tbody tr')
         const totalRows = rows.length
       
@@ -237,18 +293,6 @@
       
           // Toggle the collapse state of the target element
           $(targetId).slideToggle()
-        })
-      })
-      document.addEventListener('DOMContentLoaded', function () {
-        // Add a click event listener to each accordion toggle
-        document.querySelectorAll('.accordion-toggle').forEach(function (toggle) {
-          toggle.addEventListener('click', function () {
-            // Get the target ID from the data-target attribute
-            var targetId = this.getAttribute('data-target')
-      
-            // Toggle the 'show' class on the target element
-            document.querySelector(targetId).classList.toggle('show')
-          })
         })
       })
       function downloadTable() {

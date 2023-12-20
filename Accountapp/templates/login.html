@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Xabta - Login</title>
+    {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+  </head>
+
+  <body>
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+      <div class="position-relative overflow-hidden min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- Logo Section (Left 50%) -->
+            <div class="col-md-8 col-lg-6 col-xxl-6 d-none d-lg-block">
+              <div class="d-flex align-items-center justify-content-center h-100">
+                <div class="text-center">
+                  <a href="" class="text-nowrap logo-img d-block py-3 pt-0 pb-4"><img src="{% static 'images/logos/logo3.png' %}" width="250" alt="" /></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sign In Section (Right 50%) -->
+            <div class="col-lg-6 col-xxl-6 d-flex align-items-center justify-content-center radial-gradient min-vh-100">
+              <div class="card mb-0 col-12 col-lg-8 col-xxl-7">
+                <div class="card-body">
+                  <a href="" class="text-nowrap logo-img text-center d-block py-3 w-100 pt-0 pb-4"><img src="{% static 'images/logos/logo1.png' %}" width="180" alt="" class="d-lg-none d-xl-none" /></a>
+                  {% if messages %}
+                    <ul class="messages">
+                      {% for message in messages %}
+                        <li class="{{ message.tags }}">
+                          {% if message.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">{{ message }}</div>
+                          {% elif message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">{{ message }}</div>
+                          {% else %}
+                            <div class="alert" role="alert">{{ message }}</div>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                  <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3 mt-3">
+                      <label for="exampleInputusername1" class="form-label">Username / Email Address</label>
+                      <input type="text" class="form-control" id="exampleInputusername1" name="username" aria-describedby="usernameHelp" required />
+                    </div>
+                    <div class="mb-4">
+                      <label for="exampleInputPassword1" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1" name="password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

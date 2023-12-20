@@ -26,7 +26,9 @@ urlpatterns = [
     path('submit/', views.accounting_form, name='accounting'),
     path('submitfile/', views.showresult, name='submitfile'),
     path("editfile/<int:id>",views.edit,name="editfile"),
-    path("updatefile",views.ufile,name="updatefile")
+    path("updatefile",views.ufile,name="updatefile"),
+    path("signin",views.signin,name="signin"),
+    path("signout",views.signout,name="signout"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
