@@ -29,9 +29,13 @@
         background-color: #fcfcfc !important;
       }
       
-      .edit-button {
+      .edit-button .datelabel {
         font-size: 1rem;
         text-decoration: none;
+      }
+      
+      .toggle-buttons {
+        font-size: 1.8rem;
       }
       
       .edit-button.disabled {
@@ -75,9 +79,9 @@
               <div class="search-bar">
                 <label for="searchInput">Search:</label>
                 <input type="text" id="searchInput" class="search-input" oninput="searchTable()" placeholder="" />
-                <label for="dateInput"><i class="ti ti-calendar"></i></label>
+                <label for="dateInput"><i class="ti ti-calendar datelabel"></i></label>
                 <input type="date" id="dateInput" oninput="searchTabledate()" class="mr-2" />
-                <label for="endDate"><i class="ti ti-calendar"></i></label>
+                <label for="endDate"><i class="ti ti-calendar datelabel"></i></label>
                 <input type="date" id="endDate" onchange="searchTabledate()" />
               </div>
             </div>
@@ -101,7 +105,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for entry in accounting_form %}
+                    {% for entry in accounting_form|slice:'-10:' %}
                       <tr class="text-center">
                         <td>{{ entry.date }}</td>
                         <td>{{ entry.amount }}</td>
@@ -127,34 +131,104 @@
                       </tr>
                       <tr class="hiddenDetails text-left" id="details{{ entry.id }}">
                         <td colspan="5" class="hiddenDetails-content text-left">
-                          <p>
-                            <strong>Description:</strong> {{ entry.description }}
-                          </p>
-                          <p>
-                            <strong>Charge By:</strong> {{ entry.charge_by.name }}
-                          </p>
-                          <p>
-                            <strong>Paid By:</strong> {{ entry.paid_by.name }}
-                          </p>
-                          <p>
-                            <strong>Claim By:</strong> {{ entry.claim_by.name }}
-                          </p>
-                          <p>
-                            <strong>Comments:</strong> {{ entry.comments }}
-                          </p>
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Description:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.description }}</div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Charge By:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.charge_by.name }}</div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Paid By:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.paid_by.name }}</div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Claim By:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.claim_by.name }}</div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Comments:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.comments }}</div>
+                          </div>
                         </td>
                       </tr>
                     {% endfor %}
                   </tbody>
                 </table>
               </div>
-              <button onclick="downloadTable()" class="btn btn-primary mt-3">Download CSV</button>
+              <div class="row">
+                <!-- Left column for the Download CSV button -->
+                <div class="col-md-6">
+                  <button onclick="downloadTable()" class="btn btn-primary mt-3"><i class="ti ti-download" style="font-size: 1.1rem;"></i> CSV</button>
+                </div>
+                <!-- Right column for the Load Previous and Next Rows buttons -->
+                <div class="col-md-6 d-flex justify-content-end">
+                  <div class="text-center mt-3">
+                    <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
+                    <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <script>
+      //browse between 10 rows
+      let startIndex = 0
+      const rowsPerPage = 10
+      const loadPreviousButton = document.getElementById('loadPreviousButton')
+      const loadNextButton = document.getElementById('loadNextButton')
+      
+      function loadPreviousRows() {
+        startIndex = Math.max(0, startIndex - rowsPerPage) // Decrement the starting index by 10, but not below 0
+        updateTableRows()
+      }
+      
+      function loadNextRows() {
+        startIndex += rowsPerPage // Increment the starting index by 10
+        updateTableRows()
+      }
+      
+      function updateTableRows() {
+        const rows = document.querySelectorAll('#accounting-table tbody tr')
+        const totalRows = rows.length
+      
+        rows.forEach((row, index) => {
+          if (index >= startIndex && index < startIndex + rowsPerPage) {
+            row.style.display = '' // Display rows within the current range
+          } else {
+            row.style.display = 'none' // Hide rows outside the current range
+          }
+        })
+      
+        // Disable the "Load Next 10 Rows" button when reaching the end
+        loadNextButton.disabled = startIndex + rowsPerPage >= totalRows
+      
+        // Disable the "Load Previous 10 Rows" button when reaching the beginning
+        loadPreviousButton.disabled = startIndex === 0
+      }
+      
+      document.addEventListener('DOMContentLoaded', function () {
+        updateTableRows() // Initial update to display the latest 10 rows
+      })
+      
       //to hide and show the hiddenRow
       $(document).ready(function () {
         $('.accordion-toggle').click(function () {

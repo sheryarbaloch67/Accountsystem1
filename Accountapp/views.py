@@ -15,11 +15,8 @@ def home(request):
      vendors=Vendor.objects.all()
      subheads=Shead.objects.all()
      today = date.today()
-     print(claims)
-
-
-     print(heads)
      return render(request,"file.html",locals())
+ 
 def accounting_form(request):
     if request.method == 'POST':
         head_id = request.POST.get('head')
@@ -40,7 +37,6 @@ def accounting_form(request):
         online_number = request.POST.get('onlineNumber', None)
 
         vendors_ids = request.POST['vendors']
-        print(vendors_ids)
 
         # Handle file uploads
         attachments = request.FILES.get('attachments', None)
@@ -115,7 +111,6 @@ def accounting_form(request):
         )
         new_entry.save()
 
-        print("Data is saved with attachments:", new_entry.attachments)
         return redirect("submitfile")
 
     return render(request, 'submit.html')
