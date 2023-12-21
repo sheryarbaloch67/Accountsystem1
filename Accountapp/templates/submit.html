@@ -1,5 +1,3 @@
-<!-- your_template.html -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -137,7 +135,20 @@
                       <th>Receipt Number</th>
                       <th>Voucher</th>
                       <th>Instrument</th>
-                      <th>Actions</th>
+                      <th>
+                        <div class="d-flex justify-content-center">
+                          <div>Actions</div>
+                          <div>
+                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><strong><i class="ti ti-dots-vertical" style="font-size: 1rem;"></i></strong></a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop3">
+                              <div class="message-body d-flex flex-column justify-content-left align-items-center">
+                                <a href="{% url 'home' %}" class="btn btn-outline-primary d-block" style="font-size: 0.9rem;"><i class="ti ti-plus"></i> Row</a>
+                                <button onclick="downloadTable()" class="btn btn-outline-primary mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -207,32 +218,18 @@
                   </tbody>
                 </table>
               </div>
-              <div class="container-fluid">
-                <div class="row d-flex align-items-center justify-content-between">
-                  <div class="col-md-6">
-                    <div class="d-flex justify-content-left align-items-center">
-                      <button onclick="downloadTable()" class="btn btn-outline-primary mt-3" style="font-size: 0.9rem;"><i class="ti ti-download" style="font-size: 1.1rem;"></i> CSV</button>
-                      <a href="{% url 'home' %}" class="btn btn-outline-primary mx-3 mt-3 d-block" style="font-size: 0.9rem;"><i class="ti ti-plus" style="font-size: 0.9rem;"></i> Row</a>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="d-flex align-items-center justify-content-end">
-                      <div class="text-center mt-3 me-2">
-                        {% comment %} <label for="recordsPerPage">Records Per Page:</label> {% endcomment %}
-                        <select id="recordsPerPage" class="form-select" onchange="updateTableRows()">
-                          <option value="10">5</option>
-                          <option value="20">10</option>
-                          <option value="50">25</option>
-                          <option value="100">50</option>
-                          <option value="all">All</option>
-                        </select>
-                      </div>
-                      <div class="text-center mt-3">
-                        <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
-                        <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
-                      </div>
-                    </div>
-                  </div>
+              <div class="d-flex align-items-center justify-content-end">
+                <div class="text-center mt-3 me-2">
+                  <select id="recordsPerPage" class="form-select" onchange="updateTableRows()">
+                    <option value="50" selected>25</option>
+                    <option value="100">50</option>
+                    <option value="200">100</option>
+                    <option value="all">All</option>
+                  </select>
+                </div>
+                <div class="text-center mt-3">
+                  <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
+                  <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
                 </div>
               </div>
             </div>
@@ -288,7 +285,7 @@
     <script>
       //browse between 10 rows
       let startIndex = 0
-      let rowsPerPage = 10
+      let rowsPerPage = 50
       const loadPreviousButton = document.getElementById('loadPreviousButton')
       const loadNextButton = document.getElementById('loadNextButton')
       const recordsPerPageSelect = document.getElementById('recordsPerPage')
