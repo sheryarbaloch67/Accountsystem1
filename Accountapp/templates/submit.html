@@ -66,7 +66,7 @@
         border: var(--bs-border-width) solid #dfe5ef;
       }
       .date-input {
-        max-width: 9%;
+        max-width: 8.9%;
         padding: 8px 16px;
         font-size: 0.875rem;
         font-weight: 400;
@@ -240,19 +240,52 @@
         </div>
       </div>
     </div>
+
+    <table id="accounting-table2" style="display: none;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Head</th>
+          <th>Sub Head</th>
+          <th>Description</th>
+          <th>Receipt Number</th>
+          <th>Charge By</th>
+          <th>Voucher</th>
+          <th>Paid By</th>
+          <th>Claim By</th>
+          <th>Instrument</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in accounting_form %}
+          <tr>
+            <td>{{ entry.date }}</td>
+            <td>{{ entry.amount }}</td>
+            <td>{{ entry.head.name }}</td>
+            <td>{{ entry.sub_head }}</td>
+            <td>{{ entry.description }}</td>
+            <td>{{ entry.receipt_number }}</td>
+            <td>{{ entry.charge_by.name }}</td>
+            <td>{{ entry.voucher }}</td>
+            <td>{{ entry.paid_by.name }}</td>
+            <td>{{ entry.claim_by.name }}</td>
+            {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
+              <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
+            {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
+              <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
+            {% else %}
+              <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
+            {% endif %}
+
+            <td>{{ entry.comments }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
     <script>
-      //Debounce function
-      function debounce(func, delay) {
-        let timeout
-        return function () {
-          const context = this
-          const args = arguments
-          clearTimeout(timeout)
-          timeout = setTimeout(function () {
-            func.apply(context, args)
-          }, delay)
-        }
-      }
       //browse between 10 rows
       let startIndex = 0
       let rowsPerPage = 10
@@ -305,25 +338,6 @@
         })
       })
       
-      function downloadTable() {
-        const table = document.getElementById('accounting-table')
-        const rows = table.querySelectorAll('tr')
-        let csvContent = 'data:text/csv;charset=utf-8,'
-      
-        rows.forEach((row) => {
-          const cells = row.querySelectorAll('td, th')
-          const rowData = Array.from(cells).map((cell) => cell.textContent)
-          csvContent += rowData.join(',') + '\n'
-        })
-      
-        const encodedUri = encodeURI(csvContent)
-        const link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
-        link.setAttribute('download', 'accounting_entries.csv')
-        document.body.appendChild(link)
-        link.click()
-      }
-      
       function searchTable() {
         var input, filter, table, tr, td, i, txtValue
         input = document.getElementById('searchInput')
@@ -332,22 +346,29 @@
         tr = table.getElementsByTagName('tr')
       
         for (i = 0; i < tr.length; i++) {
-          // Assuming the first column contains the date, the sixth column contains the receipt number,
-          // and the eighth column contains the voucher number
           var dateTd = tr[i].getElementsByTagName('td')[0]
-          var receiptTd = tr[i].getElementsByTagName('td')[5]
-          var voucherTd = tr[i].getElementsByTagName('td')[7]
+          var amountTd = tr[i].getElementsByTagName('td')[1] // Assuming Index 1 corresponds to the Amount column
+          var headTd = tr[i].getElementsByTagName('td')[2] // Assuming Index 2 corresponds to the Head column
+          var subHeadTd = tr[i].getElementsByTagName('td')[3] // Assuming Index 3 corresponds to the Sub Head column
+          var receiptTd = tr[i].getElementsByTagName('td')[4] // Assuming Index 4 corresponds to the Receipt Number column
+          var voucherTd = tr[i].getElementsByTagName('td')[5] // Assuming Index 5 corresponds to the Voucher column
+          var instrumentTd = tr[i].getElementsByTagName('td')[6] // Assuming Index 6 corresponds to the Instrument column
       
           if (filter === '') {
             // If the search input is empty, display all rows
             tr[i].style.display = ''
           } else {
-            if (dateTd && receiptTd && voucherTd) {
+            if (dateTd && amountTd && headTd && subHeadTd && receiptTd && voucherTd && instrumentTd) {
               var dateValue = dateTd.textContent || dateTd.innerText
+              var amountValue = amountTd.textContent || amountTd.innerText
+              var headValue = headTd.textContent || headTd.innerText
+              var subHeadValue = subHeadTd.textContent || subHeadTd.innerText
               var receiptValue = receiptTd.textContent || receiptTd.innerText
               var voucherValue = voucherTd.textContent || voucherTd.innerText
+              var instrumentValue = instrumentTd.textContent || instrumentTd.innerText
       
-              if (dateValue.toUpperCase().includes(filter) || receiptValue.toUpperCase().includes(filter) || voucherValue.toUpperCase().includes(filter)) {
+              // Check if any of the columns includes the search filter
+              if (dateValue.toUpperCase().includes(filter) || receiptValue.toUpperCase().includes(filter) || voucherValue.toUpperCase().includes(filter) || instrumentValue.toUpperCase().includes(filter)) {
                 tr[i].style.display = ''
               } else {
                 tr[i].style.display = 'none'
@@ -360,8 +381,8 @@
       function searchTabledate() {
         var startDateInput = document.getElementById('dateInput')
         var endDateInput = document.getElementById('endDate')
-        var startFilter = new Date(startDateInput.value).toISOString()
-        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000).toISOString() // Add 24 hours to include the entire selected end date
+        var startFilter = new Date(startDateInput.value)
+        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000) // Add 24 hours to include the entire selected end date
       
         var table = document.getElementById('accounting-table')
         var tr = table.getElementsByTagName('tr')
@@ -370,10 +391,10 @@
           var dateTd = tr[i].getElementsByTagName('td')[0]
       
           if (dateTd) {
-            var dateValue = new Date(dateTd.textContent.trim()).toISOString()
+            var dateValue = new Date(dateTd.textContent.trim())
       
             // Check if the date is within the selected range
-            if ((startFilter === '' || dateValue >= startFilter) && (endFilter === '' || dateValue <= endFilter)) {
+            if ((isNaN(startFilter) || dateValue >= startFilter) && (isNaN(endFilter) || dateValue <= endFilter)) {
               tr[i].style.display = ''
             } else {
               tr[i].style.display = 'none'
@@ -382,30 +403,8 @@
         }
       }
       
-      document.getElementById('dateInput').max = new Date().toISOString().split('T')[0]
-      function updateSearchInputWithDate() {
-        var dateInput = document.querySelector('input[type="date"]')
-        var searchInput = document.getElementById('searchInput')
-      
-        // Get the selected date from the input
-        var selectedDate = new Date(dateInput.value)
-      
-        // Set the time to midnight in UTC
-        selectedDate.setUTCHours(0, 0, 0, 0)
-      
-        // Format the date manually as "MMM. D, YYYY"
-        var months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.']
-        var formattedDate = months[selectedDate.getUTCMonth()] + ' ' + selectedDate.getUTCDate() + ', ' + selectedDate.getUTCFullYear()
-      
-        // Set the value of the search input to the formatted date
-        searchInput.value = formattedDate
-      
-        // Trigger the searchTable function to update the table based on the new search input
-        searchTable()
-      }
-      
       function downloadTable() {
-        const table = document.getElementById('accounting-table')
+        const table = document.getElementById('accounting-table2')
         const rows = table.querySelectorAll('tr')
         let csvContent = 'data:text/csv;charset=utf-8,' + '\uFEFF' // Add BOM for Excel compatibility
       
