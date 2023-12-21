@@ -54,7 +54,7 @@
       }
       
       .search-input {
-        max-width: 40%;
+        max-width: 50%;
         padding: 8px 16px;
         font-size: 0.875rem;
         font-weight: 400;
@@ -76,6 +76,15 @@
         background-color: transparent;
         background-clip: padding-box;
         border: var(--bs-border-width) solid #dfe5ef;
+      }
+      .hiddenDetails {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+      }
+      
+      .hiddenDetails.show {
+        max-height: 500px; /* Set an appropriate max-height value */
       }
       @media (max-width: 600px) {
         .date-input {
@@ -150,9 +159,9 @@
                         <td>
                           <button class="text-primary accordion-toggle" data-target="#details{{ entry.id }}" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-layout-navbar-expand" style="font-size: 1.1rem;"></i></button>
                           {% if entry.date == today %}
-                            <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit"></i></a>
+                            <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></a>
                           {% else %}
-                            <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit"></i></span>
+                            <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></span>
                           {% endif %}
                         </td>
                       </tr>
@@ -211,10 +220,10 @@
                       <div class="text-center mt-3 me-2">
                         {% comment %} <label for="recordsPerPage">Records Per Page:</label> {% endcomment %}
                         <select id="recordsPerPage" class="form-select" onchange="updateTableRows()">
-                          <option value="10">10</option>
-                          <option value="20">20</option>
-                          <option value="50">50</option>
-                          <option value="100">100</option>
+                          <option value="10">5</option>
+                          <option value="20">10</option>
+                          <option value="50">25</option>
+                          <option value="100">50</option>
                           <option value="all">All</option>
                         </select>
                       </div>
@@ -292,9 +301,10 @@
           var targetId = $(this).data('target')
       
           // Toggle the collapse state of the target element
-          $(targetId).slideToggle()
+          $(targetId).slideToggle(00)
         })
       })
+      
       function downloadTable() {
         const table = document.getElementById('accounting-table')
         const rows = table.querySelectorAll('tr')
