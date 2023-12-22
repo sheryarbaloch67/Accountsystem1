@@ -185,6 +185,7 @@ def ufile(request):
             entry.charge_by = charge.objects.get(id=int(request.POST.get("chargeBy")))
             # entry.voucher = str(entry.charge_by) + "-" + str(request.POST['Voucher'])
             entry.paid_by = paid.objects.get(id=int(request.POST.get("paidBy")))
+            entry.vendors = Vendor.objects.get(id=int(request.POST.get("vendors")))
             entry.claim_by = claim.objects.get(id=int(request.POST.get("claimBy")))
             entry.comments = request.POST.get("comments")
 
@@ -206,9 +207,9 @@ def ufile(request):
 
 @login_required(login_url="signin")
 def showresult(request):
-    accounting_form = AccountingEntry.objects.all().order_by("-date")
-    for i in accounting_form:
-        print(i.date)
+    accounting_form = AccountingEntry.objects.all().order_by("-id")
+    # for i in accounting_form:
+    #     print(i.date)
     # print(accounting_form)
     today = date.today()
     # formatted_date = today.strftime("%b. %d, %Y")

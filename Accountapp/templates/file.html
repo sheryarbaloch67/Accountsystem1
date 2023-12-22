@@ -42,17 +42,17 @@
                         {% csrf_token %}
                         <div class="row">
                           <div class="mb-3 col-md-6">
-                            <label for="amount" class="form-label">*Amount</label>
+                            <label for="amount" class="form-label">Amount*</label>
                             <input type="text" class="form-control" id="amount" name="amount" placeholder="Please enter a valid amount" required />
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="receiptNumber" class="form-label">*Receipt Number</label>
+                            <label for="receiptNumber" class="form-label">Receipt Number*</label>
                             <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid receipt number" required />
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="head" class="form-label">*Head</label>
+                            <label for="head" class="form-label">Head*</label>
                             <select id="head" name="head" class="form-select" required>
                               {% for head_option in heads %}
                                 <option class="form-control" value="{{ head_option.id }}">{{ head_option.name }}</option>
@@ -61,7 +61,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="subHead" class="form-label">*Sub Head</label>
+                            <label for="subHead" class="form-label">Sub Head*</label>
                             <select id="subHead" name="subHead" class="form-select" required>
                               {% for subhead_option in subheads %}
                                 <option class="form-control" value="{{ subhead_option.id }}">{{ subhead_option.name }}</option>
@@ -70,7 +70,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="chargeBy" class="form-label">*Charge By</label>
+                            <label for="chargeBy" class="form-label">Charge By*</label>
                             <select id="chargeBy" name="chargeBy" class="form-select" required>
                               {% for charge_option in charges %}
                                 <option class="form-control" value="{{ charge_option.id }}">{{ charge_option.name }}</option>
@@ -79,7 +79,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="paidBy" class="form-label">*Paid By</label>
+                            <label for="paidBy" class="form-label">Paid By*</label>
                             <select id="paidBy" name="paidBy" class="form-select" required>
                               {% for paid_option in paids %}
                                 <option class="form-control" value="{{ paid_option.id }}">{{ paid_option.name }}</option>
@@ -88,7 +88,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="claimBy" class="form-label">*Claim By</label>
+                            <label for="claimBy" class="form-label">Claim By*</label>
                             <select id="claimBy" name="claimBy" class="form-select" required>
                               {% for claim_option in claims %}
                                 <option class="form-control" value="{{ claim_option.id }}">{{ claim_option.name }}</option>
@@ -98,7 +98,7 @@
 
                           <div class="mb-3 col-md-6">
                             <label for="vendors" class="form-label">
-                              *Vendors
+                              Vendors*
                               <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-plus" style="font-size: 1.1rem;"></i></button>
                             </label>
 
@@ -115,7 +115,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="instrument" class="form-label">*Instrument</label>
+                            <label for="instrument" class="form-label">Instrument*</label>
                             <select id="instrument" name="instrument" class="form-select" onchange="toggleInstrumentFields()" required>
                               <option class="form-control" value="">Select instrument</option>
                               <option class="form-control" value="cash">Cash</option>
@@ -125,17 +125,17 @@
                           </div>
 
                           <div id="cashFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="cashNumber" class="form-label">*Cash Number</label>
+                            <label for="cashNumber" class="form-label">Cash Number*</label>
                             <input type="text" id="cashNumber" name="cashNumber" class="form-control" />
                           </div>
 
                           <div id="chequeFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="chequeNumber" class="form-label">*Cheque Number</label>
+                            <label for="chequeNumber" class="form-label">Cheque Number*</label>
                             <input type="text" id="chequeNumber" name="chequeNumber" class="form-control" />
                           </div>
 
                           <div id="onlineFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="onlineNumber" class="form-label">*Online Transfer Number</label>
+                            <label for="onlineNumber" class="form-label">Online Transfer Number*</label>
                             <input type="text" id="onlineNumber" name="onlineNumber" class="form-control" />
                           </div>
 
@@ -143,15 +143,15 @@
 
                           <div class="mb-3 col-md-6">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" rows="4" id="description" name="description" placeholder="Please enter some description"></textarea>
+                            <textarea class="form-control" rows="4" id="description" name="description" placeholder="Please enter description"></textarea>
                           </div>
 
                           <div class="mb-3 col-md-6">
                             <label for="comments" class="form-label">Comments</label>
-                            <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter some comments"></textarea>
+                            <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter comments"></textarea>
                           </div>
                         </div>
-                        <button id="btn" type="submit" class="btn btn-primary mt-3">Submit</button>
+                        <button id="btn" type="submit" class="btn btn-outline-primary mt-3">Submit</button>
                       </form>
                     </div>
                   </div>
@@ -196,7 +196,7 @@
       
           // Check if the vendor already exists in the dropdown
           var vendorExists = Array.from(vendorsDropdown.options).some(function (option) {
-            return option.value === newVendor
+            return option.value.toLowerCase() === newVendor.toLowerCase()
           })
       
           if (!vendorExists) {

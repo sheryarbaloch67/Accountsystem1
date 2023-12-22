@@ -1,196 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Accounting Form</title>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit File Form</title>
+    {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
     <style>
+      html {
+        background-color: #f2f2f2 !important;
+      }
       body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
+        background-color: #f2f2f2 !important;
       }
-      
-      .container {
-        max-width: 600px;
-        margin: 50px auto;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      
-      label {
-        display: block;
-        margin-bottom: 8px;
-      }
-      
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 16px;
-        box-sizing: border-box;
-      }
-      
-      #btn {
-        background-color: #4caf50;
-        color: #fff;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      
-      button:hover {
-        background-color: #45a049;
-      }
-      
-      .search-bar {
-        position: relative;
-      }
-      
-      .calendar-icon {
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        cursor: pointer;
+      .main-card {
+        background-color: #fcfcfc !important;
       }
     </style>
   </head>
+
   <body>
-    <div class="container">
-      <h2>Accounting Form</h2>
-      <form action="{% url 'updatefile' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
+      <!-- Main wrapper -->
+      <div class="body-wrapper">
+        <div class="container-fluid mt-4">
+          <div class="card">
+            <div class="card-body main-card">
+              <div class="row">
+                <div class="col-md-12">
+                  <h5 class="card-title fw-semibold mb-4">Edit File Form</h5>
+                  {% comment %} <p class="form-label text-primary">*Hover over the fields for more Information</p> {% endcomment %}
+                  <div class="card">
+                    <div class="card-body">
+                      <form action="{% url 'updatefile' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">                
+                        <div class="mb-3 col-md-6">
+                            <label for="amount" class="form-label">Amount*</label>
+                            <input type="text" class="form-control" id="amount" name="amount" value="{{ data.amount }}" required />
+                            <input type="text" class="form-control" id="userid" name="userid" hidden value="{{ data.id }}" />
+                        </div>
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="receiptNumber" class="form-label">Receipt Number*</label>
+                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" value="{{ data.receipt_number }}" required />
+                        </div>
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="head" class="form-label">Head*</label>
+                            <select id="head" name="head" class="form-select" required>
+                                {% for head_option in heads %}
+                                    <option class="form-control" value="{{ head_option.id }}" {% if head_option.id == data.head.id %}selected{% endif %}>
+                                        {{ head_option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="subHead" class="form-label">Sub Head*</label>
+                            <select id="subHead" name="subHead" class="form-select" required>
+                                {% for subhead_option in subheads %}
+                                    <option class="form-control" value="{{ subhead_option.id }}" {% if subhead_option.id == data.sub_head.id %}selected{% endif %}>
+                                        {{ subhead_option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+              
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="claimBy" class="form-label">Claim By*</label>
+                            <select id="claimBy" name="claimBy" class="form-select" required>
+                                {% for claim_option in claims %}
+                                    <option class="form-control" value="{{ claim_option.id }}" {% if claim_option.id == data.claim_by.id %}selected{% endif %}>
+                                        {{ claim_option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="chargeBy" class="form-label">Charge By*</label>
+                            <select id="chargeBy" name="chargeBy" class="form-select" required>
+                                {% for charge_option in charges %}
+                                    <option class="form-control" value="{{ charge_option.id }}" {% if charge_option.id == data.charge_by.id %}selected{% endif %}>
+                                        {{ charge_option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                
+                        <div class="mb-3 col-md-6">
+                            <label for="paidBy" class="form-label">Paid By*</label>
+                            <select id="paidBy" name="paidBy" class="form-select" required>
+                                {% for paid_option in Paid %}
+                                    <option class="form-control" value="{{ paid_option.id }}" {% if paid_option.id == data.paid_by.id %}selected{% endif %}>
+                                        {{ paid_option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>                       
+                
+                        <div class="mb-3 col-md-6">
+                          <label for="vendors" class="form-label">
+                            Vendors*
+                            <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;">
+                              <i class="ti ti-square-plus" style="font-size: 1.1rem;"></i>
+                            </button>
+                          </label>
+                        
+                          <select id="vendors" name="vendors" class="form-select" required>
+                            {% for vendor_option in vendors %}
+                              <option class="form-control" value="{{ vendor_option.id }}" {% if vendor_option.id == data.vendors.id %}selected{% endif %}>
+                                  {{ vendor_option }}
+                              </option>
+                            {% endfor %}
+                          </select>
+                        </div>                        
+                
+                        <div class="mb-3 col-md-6">
+                          <label for="attachments" class="form-label" style="cursor: pointer;">Attachments</label>
+                          <input class="form-control" type="file" id="attachments" name="attachments" />
+                        </div>
 
-        <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" value="{{ data.amount }}" />
-        <input type="text" id="amount" name="userid" hidden value="{{ data.id }}" />
+                        <div id="cashFields" class="mb-3 col-md-6">
+                          <label for="cashNumber" class="form-label">{{ data.instrument }} No:*</label>
+                          {% if data.instrument == 'cash' %}
+                              <input type="text" id="cashNumber" name="cashNumber" class="form-control" value="{{ data.cash_number }}" />
+                          {% elif data.instrument == 'cheque' %}
+                              <input type="text" id="cashNumber" name="chequeNumber" class="form-control" value="{{ data.cheque_number }}" />
+                          {% else %}
+                              <input type="text" id="cashNumber" name="onlineNumber" class="form-control" value="{{ data.online_number }}" />
+                          {% endif %}
+                        </div>
 
-        <label for="head">Head:</label>
+                        <div class="mb-3 col-md-6">
+                          <label for="description" class="form-label">Description</label>
+                          <textarea class="form-control" rows="4" id="description" name="description" placeholder="Please enter description">{{ data.description }}</textarea>
+                        </div>
 
-        <select id="head" name="head">
-          {% for head_option in heads %}
-            <option value="{{ head_option.id }}">{{ head_option.name }}</option>
-          {% endfor %}
-        </select>
-
-        <div class="mb-3 col-md-6">
-          <label for="receiptNumber" class="form-label">*Receipt Number</label>
-          <input type="text" id="receiptNumber" name="receiptNumber" value="{{ data.receipt_number }}" />
+                        <div class="mb-3 col-md-6">
+                          <label for="comments" class="form-label">Comments</label>
+                          <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter comments">{{ data.comments }}</textarea>
+                        </div>
+                      </div>                
+                      <button id="btn" type="submit" class="btn btn-outline-primary mt-3">Submit</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="mb-3 col-md-6">
-          <label for="subHead" class="form-label">*Sub Head</label>
-          <select id="subHead" name="subHead" class="form-select" required>
-            {% for subhead_option in subheads %}
-              <option class="form-control" value="{{ subhead_option.id }}">{{ subhead_option.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div id="cashFields">
-          <label for="cashNumber">{{ data.instrument }} No:</label>
-          {% if data.instrument == 'cash' %}
-            <input type="text" id="cashNumber" value="{{ data.cash_number }}" name="cashNumber" />
-          {% elif data.instrument == 'cheque' %}
-            <input type="text" id="cashNumber" value="{{ data.cheque_number }}" name="chequeNumber" />
-          {% else %}
-            <input type="text" id="cashNumber" value="{{ data.online_number }}" name="onlineNumber" />
-          {% endif %}
-        </div>
-
-        <div class="mb-3 col-md-6">
-          <label for="claimBy" class="form-label">*Claim By</label>
-          <select id="claimBy" name="claimBy" class="form-select" required>
-            {% for claim_option in claims %}
-              <option class="form-control" value="{{ claim_option.id }}">{{ claim_option.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="mb-3 col-md-6">
-          <label for="chargeBy" class="form-label">*Charge By</label>
-          <select id="chargeBy" name="chargeBy" class="form-select" required>
-            {% for charge_option in charges %}
-              <option class="form-control" value="{{ charge_option.id }}">{{ charge_option.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="mb-3 col-md-6">
-          <label for="paidBy" class="form-label">*Paid By</label>
-          <select id="paidBy" name="paidBy" class="form-select">
-            {% for paid_option in Paid %}
-              <option class="form-control" value="{{ paid_option.id }}">{{ paid_option.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <label for="comments">Comments:</label>
-        <textarea id="comments" name="comments" rows="4">{{ data.comments }}</textarea>
-
-        <div class="mb-3 col-md-6">
-          <label for="description">Description:</label>
-          <textarea id="description" name="description" rows="4">{{ data.description }}</textarea>
-        </div>
-
-        <label for="vendors">
-          Vendors:
-
-          <button type="button" class="add-vendor-button" onclick="addVendor()">
-            <svg width="15" height="15" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v4h4v2h-4v4h-2v-4H7v-2h4z" />
-            </svg>
-          </button>
-        </label>
-
-        <select id="vendors" name="vendors">
-          {% for vendor_option in vendors %}
-            <option value="{{ vendor_option }}">{{ vendor_option }}</option>
-          {% endfor %}
-        </select>
-
-        <label for="attachments">Attachments:</label>
-        <input type="file" id="attachments" name="attachments" />
-
-        <button id="btn" type="submit">Submit</button>
-      </form>
+      </div>
     </div>
-
     <script>
-      function toggleInstrumentFields() {
-        var instrument = document.getElementById('instrument').value
-        var cashFields = document.getElementById('cashFields')
-        var chequeFields = document.getElementById('chequeFields')
-        var onlineFields = document.getElementById('onlineFields')
-      
-        if (instrument === 'cash') {
-          cashFields.style.display = 'block'
-          chequeFields.style.display = 'none'
-          onlineFields.style.display = 'none'
-        } else if (instrument === 'cheque') {
-          cashFields.style.display = 'none'
-          chequeFields.style.display = 'block'
-          onlineFields.style.display = 'none'
-        } else if (instrument === 'online') {
-          cashFields.style.display = 'none'
-          chequeFields.style.display = 'none'
-          onlineFields.style.display = 'block'
-        }
-      }
-      
       function addVendor() {
         var newVendor = prompt('Enter a new vendor:')
       
@@ -199,7 +171,7 @@
       
           // Check if the vendor already exists in the dropdown
           var vendorExists = Array.from(vendorsDropdown.options).some(function (option) {
-            return option.value === newVendor
+            return option.value.toLowerCase() === newVendor.toLowerCase()
           })
       
           if (!vendorExists) {
@@ -213,5 +185,11 @@
         }
       }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/app.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
   </body>
 </html>

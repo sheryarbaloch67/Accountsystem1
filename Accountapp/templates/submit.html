@@ -84,6 +84,9 @@
       .hiddenDetails.show {
         max-height: 500px; /* Set an appropriate max-height value */
       }
+      
+      .card-body {
+      }
       @media (max-width: 600px) {
         .date-input {
           padding: 8px 13px;
@@ -111,10 +114,10 @@
                 <input type="date" id="endDate" class="date-input" onchange="searchTabledate()" />
               </div>
               <div>
-                <a class="nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                <a class="" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="{% url 'signout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    <a href="{% url 'signout' %}" class="btn btn-outline-primary mx-3 d-block">Logout <i class="ti ti-logout" style="font-size: 1.1rem;"></i></a>
                   </div>
                 </div>
               </div>
@@ -123,8 +126,11 @@
         </div>
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body pt-2">
               <div class="table-responsive">
+                <div class="d-flex justify-content-end align-items-center">
+                  <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-square-plus"></i></a>
+                </div>
                 <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
                   <thead class="text-dark fs-4 text-center">
                     <tr>
@@ -137,13 +143,12 @@
                       <th>Instrument</th>
                       <th>
                         <div class="d-flex justify-content-center">
-                          <div>Actions</div>
                           <div>
                             <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><strong><i class="ti ti-dots-vertical" style="font-size: 1rem;"></i></strong></a>
-                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop3">
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
                               <div class="message-body d-flex flex-column justify-content-left align-items-center">
-                                <a href="{% url 'home' %}" class="btn btn-outline-primary d-block" style="font-size: 0.9rem;"><i class="ti ti-plus"></i> Row</a>
-                                <button onclick="downloadTable()" class="btn btn-outline-primary mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
+                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
+                                <a href="" class="btn btn-outline-primary d-block mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> Summary</a>
                               </div>
                             </div>
                           </div>
