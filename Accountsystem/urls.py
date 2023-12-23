@@ -27,6 +27,7 @@ urlpatterns = [
     path('submitfile/', views.showresult, name='submitfile'),
     path("editfile/<int:id>",views.edit,name="editfile"),
     path("updatefile",views.ufile,name="updatefile"),
+    path('get_subheads/', views.get_subheads, name='get_subheads'),
     path("signin",views.signin,name="signin"),
     path("signout",views.signout,name="signout"),
 ]

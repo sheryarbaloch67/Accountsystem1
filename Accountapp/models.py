@@ -9,6 +9,7 @@ class Head(models.Model):
     
 class Shead(models.Model):
     name = models.CharField(max_length=50)
+    head = models.ForeignKey(Head, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

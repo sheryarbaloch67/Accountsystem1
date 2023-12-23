@@ -209,6 +209,61 @@
           }
         }
       }
+
+
+
+        // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
+        $(document).ready(function () {
+          var selectedHeadId = $('#head').val();
+      
+          $.ajax({
+            url: '{% url "get_subheads" %}',
+            data: { head_id: selectedHeadId },
+            dataType: 'json',
+            success: function (data) {
+              // Clear the current sub-head options
+              $('#subHead').empty();
+      
+              // Add the new sub-head options
+              for (var i = 0; i < data.length; i++) {
+                $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error('Error fetching sub-heads:', error);
+            }
+          });
+        });
+      
+        // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
+        $('#head').on('change', function () {
+          var selectedHeadId = $(this).val();
+      
+          $.ajax({
+            url: '{% url "get_subheads" %}',
+            data: { head_id: selectedHeadId },
+            dataType: 'json',
+            success: function (data) {
+              // Clear the current sub-head options
+              $('#subHead').empty();
+      
+              // Add the new sub-head options
+              for (var i = 0; i < data.length; i++) {
+                $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error('Error fetching sub-heads:', error);
+            }
+          });
+        });
+
+
+
+
+
+
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
