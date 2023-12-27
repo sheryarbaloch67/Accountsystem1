@@ -36,16 +36,11 @@
         font-size: 1.6rem;
       }
       
-      .edit-button.disabled,
-      .delete-button.disabled {
+      .edit-button.disabled {
         color: #999 !important; /* or any color that indicates a disabled state */
         cursor: not-allowed;
         pointer-events: none;
         text-decoration: none;
-      }
-      
-      .delete-button i:hover {
-        color: #fa896b;
       }
       
       .hiddenDetails {
@@ -69,7 +64,7 @@
         border: var(--bs-border-width) solid #dfe5ef;
       }
       .date-input {
-        max-width: 150px;
+        max-width: 8.9%;
         padding: 8px 16px;
         font-size: 0.875rem;
         font-weight: 400;
@@ -89,47 +84,21 @@
       .hiddenDetails.show {
         max-height: 500px; /* Set an appropriate max-height value */
       }
-      th {
-        width: fit-content;
-        text-align: center;
-      }
       
-      td.vendor,
-      td.instrument {
-        box-sizing: border-box !important;
-        max-width: 10px !important;
-        overflow: hidden;
+      .card-body {
       }
-      .headers {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-        width: fit-content;
-        margin-left: 10px;
+      @media (max-width: 600px) {
+        .date-input {
+          padding: 8px 13px;
+          max-width: 19%;
+        }
+        .search-input {
+          max-width: 22%;
+        }
       }
-      
+
       .search-input1 {
-        padding: 8px 16px;
-        font-size: 0.875rem;
-        font-weight: 400;
-        color: #5a6a85;
-        border-radius: 50px;
-        background-color: transparent;
-        border: var(--bs-border-width) solid #dfe5ef;
-      }
-      #receiptNumberInput {
-        width: 120px;
-      }
-      #voucherInput {
-        width: 75px;
-      }
-      #instrumentInput {
-        width: 85px;
-      }
-      #vendorInput {
-        width: 70px;
-      }
-      .hidden {
-        display: none;
+        width:20px
       }
     </style>
   </head>
@@ -142,59 +111,29 @@
         <div class="container-fluid">
           <div class="card my-navbar">
             <div class="card-body d-flex justify-content-between">
-              <div class="search-bar">
-                {% comment %} <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" class="search-input me-2" oninput="searchTable()" placeholder="" /> {% endcomment %}
-                <input type="date" id="dateInput" oninput="searchTabledate()" class="date-input me-2 mb-2" placeholder="Select start date" />
-                <input type="date" id="endDate" class="date-input" oninput="searchTabledate()" />
-              </div>
-              <div>
-                <a class="" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
-                  <div class="message-body">
-                    <a href="{% url 'signout' %}" class="btn btn-outline-primary mx-3 d-block">Logout <i class="ti ti-logout" style="font-size: 1.1rem;"></i></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
+       
         <div class="container-fluid">
           <div class="card">
             <div class="card-body pt-2">
-              <div class="d-flex justify-content-end align-items-center">
-                {% comment %} <a href="{% url 'home' %}" class="btn btn-outline-primary"><i class="ti ti-plus"></i>New</a> {% endcomment %}
-                <button id="toggleSearch" class="btn btn-primary text-primary me-1" style="background-color: transparent; border: none; margin-top: 2px; padding: 0; font-size: 1.3rem;"><i class="ti ti-search"></i></button>
-                <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-plus"></i></a>
-              </div>
               <div class="table-responsive">
+                <div class="d-flex justify-content-end align-items-center">
+                  <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-square-plus"></i></a>
+                </div>
                 <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
                   <thead class="text-dark fs-4 text-center">
                     <tr>
-                      {% comment %} <input type="text" id="receiptNumberInput" class="search-input1 me-2" oninput="searchTableByColumn(this)" placeholder="" />
-                      <input type="text" id="voucherInput" class="search-input1 me-2" oninput="searchTableByColumn(this)" placeholder="" />
-                      <input type="text" id="instrumentInput" class="search-input1 me-2" oninput="searchTableByColumn(this)" placeholder="" />
-                      <input type="text" id="vendorInput" class="search-input1 me-2" oninput="searchTableByColumn(this)" placeholder="" /> {% endcomment %}
                       <th>Date</th>
+                
+              
+
                       <th>Amount</th>
+                      
                       <th>Head</th>
                       <th>Sub Head</th>
-                      <th class="text-center">
-                        <input type="text" id="receiptNumberInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Receipt Number</p>
-                      </th>
-                      <th>
-                        <input type="text" id="voucherInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Voucher</p>
-                      </th>
-                      <th>
-                        <input type="text" id="instrumentInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Instrument</p>
-                      </th>
-                      <th>
-                        <input type="text" id="vendorInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Vendor</p>
-                      </th>
+                      <th>Receipt Number</th>
+                      <th>Voucher</th>
+                      <th>Instrument</th>
                       <th>
                         <div class="d-flex justify-content-center">
                           <div>
@@ -202,7 +141,7 @@
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
                               <div class="message-body d-flex flex-column justify-content-left align-items-center">
                                 <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
-                                <a href="{% url 'summaryfile' %}" class="btn btn-outline-primary d-block mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> Summary</a>
+                                <a href="" class="btn btn-outline-primary d-block mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> Summary</a>
                               </div>
                             </div>
                           </div>
@@ -211,36 +150,37 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for entry in accounting_form|slice:'-10:' %}
+                    {% for entry in todayentry|slice:'-10:' %}
                       <tr class="text-center">
                         <td>{{ entry.date }}</td>
-
+                      
                         <td>{{ entry.amount }}</td>
                         <td>{{ entry.head.name }}</td>
                         <td>{{ entry.sub_head }}</td>
                         <td>{{ entry.receipt_number }}</td>
                         <td>{{ entry.voucher }}</td>
                         {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
-                          <td class="instrument">{{ entry.instrument }}-{{ entry.cash_number }}</td>
+                          <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
                         {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
-                          <td class="instrument">{{ entry.instrument }}-{{ entry.cheque_number }}</td>
+                          <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
                         {% else %}
-                          <td class="instrument">{{ entry.instrument }}-{{ entry.online_number }}</td>
+                          <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
                         {% endif %}
-                        <td class="vendor">{{ entry.vendors }}</td>
-                        <td>
-                          <button class="text-primary accordion-toggle" data-target="#details{{ entry.id }}" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-down" style="font-size: 1.1rem;"></i></button>
-                          {% if entry.date == today %}
-                            <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></a>
-                            <a href="{% url 'deletefile' entry.id %}" class="delete-button text-nowrap text-primary" onclick="return confirm('Are you sure you want to delete this entry?');"><i class="ti ti-trash" style="font-size: 1.1rem;"></i></a>
-                          {% else %}
-                            <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></span>
-                            <span class="delete-button disabled text-nowrap text-primary"><i class="ti ti-trash" style="font-size: 1.1rem;"></i></span>
-                          {% endif %}
+                    
+
+
+                         
                         </td>
                       </tr>
                       <tr class="hiddenDetails text-left" id="details{{ entry.id }}">
                         <td colspan="5" class="hiddenDetails-content text-left">
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Description:</strong>
+                            </div>
+                            <div class="col-md-9">{{ entry.description }}</div>
+                          </div>
+
                           <div class="row">
                             <div class="col-md-2 mb-1">
                               <strong>Charge By:</strong>
@@ -264,23 +204,9 @@
 
                           <div class="row">
                             <div class="col-md-2 mb-1">
-                              <strong>Vendor:</strong>
-                            </div>
-                            <div class="col-md-9">{{ entry.vendors }}</div>
-                          </div>
-
-                          <div class="row">
-                            <div class="col-md-2 mb-1">
                               <strong>Comments:</strong>
                             </div>
                             <div class="col-md-9">{{ entry.comments }}</div>
-                          </div>
-
-                          <div class="row">
-                            <div class="col-md-2 mb-1">
-                              <strong>Description:</strong>
-                            </div>
-                            <div class="col-md-9">{{ entry.description }}</div>
                           </div>
                         </td>
                       </tr>
@@ -308,59 +234,12 @@
       </div>
     </div>
 
-    <table id="accounting-table2" style="display: none;">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Amount</th>
-          <th>Head</th>
-          <th>Sub Head</th>
-          <th>Description</th>
-          <th>Receipt Number</th>
-          <th>Charge By</th>
-          <th>Voucher</th>
-          <th>Paid By</th>
-          <th>Claim By</th>
-          <th>Instrument</th>
-          <th>Comments</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in accounting_form %}
-          <tr>
-            <td>{{ entry.date }}</td>
-            <td>{{ entry.amount }}</td>
-            <td>{{ entry.head.name }}</td>
-            <td>{{ entry.sub_head }}</td>
-            <td>{{ entry.description }}</td>
-            <td>{{ entry.receipt_number }}</td>
-            <td>{{ entry.charge_by.name }}</td>
-            <td>{{ entry.voucher }}</td>
-            <td>{{ entry.paid_by.name }}</td>
-            <td>{{ entry.claim_by.name }}</td>
-            {% if entry.instrument == 'cash' or entry.instrument == 'Cash' %}
-              <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
-            {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
-              <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
-            {% else %}
-              <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
-            {% endif %}
-
-            <td>{{ entry.comments }}</td>
-          </tr>
-        {% endfor %}
+    
+    
       </tbody>
     </table>
 
     <script>
-      //search input hidden Toggle
-      document.getElementById('toggleSearch').addEventListener('click', function () {
-        var inputs = document.querySelectorAll('.search-input1')
-      
-        inputs.forEach(function (input) {
-          input.classList.toggle('hidden')
-        })
-      })
       //browse between 10 rows
       let startIndex = 0
       let rowsPerPage = 50
@@ -477,42 +356,44 @@
           }
         }
       }
-      
+
+
+
       function searchTableByColumn(inputElement) {
-        var filter = inputElement.value.toUpperCase()
-        var columnIndex = getColumnIndex(inputElement.id.replace('Input', ''))
-      
-        var table = document.getElementById('accounting-table')
-        var tr = table.getElementsByTagName('tr')
-      
-        for (var i = 0; i < tr.length; i++) {
-          var columnTd = tr[i].getElementsByTagName('td')[columnIndex]
-      
-          if (columnTd) {
-            var columnValue = columnTd.textContent || columnTd.innerText
-      
+    var filter = inputElement.value.toUpperCase();
+    var columnIndex = getColumnIndex(inputElement.id.replace("Input", ""));
+
+    var table = document.getElementById('accounting-table');
+    var tr = table.getElementsByTagName('tr');
+
+    for (var i = 0; i < tr.length; i++) {
+        var columnTd = tr[i].getElementsByTagName('td')[columnIndex];
+
+        if (columnTd) {
+            var columnValue = columnTd.textContent || columnTd.innerText;
+
             // Check if the column matches the search filter
             if (columnValue.toUpperCase().includes(filter)) {
-              tr[i].style.display = ''
+                tr[i].style.display = '';
             } else {
-              tr[i].style.display = 'none'
+                tr[i].style.display = 'none';
             }
-          }
         }
-      }
-      
-      function getColumnIndex(columnName) {
-        // Map column names to their corresponding index
-        var columnMap = {
-          receiptNumber: 4, // Adjust the index based on your actual table structure
-          voucher: 5,
-          instrument: 6,
-          vendor: 7
-          // Add more columns as needed
-        }
-      
-        return columnMap[columnName]
-      }
+    }
+}
+
+function getColumnIndex(columnName) {
+    // Map column names to their corresponding index
+    var columnMap = {
+        'receiptNumber': 4, // Adjust the index based on your actual table structure
+        'voucher': 5,
+        'instrument': 6
+        // Add more columns as needed
+    };
+
+    return columnMap[columnName];
+}
+
       
       function downloadTable() {
         const table = document.getElementById('accounting-table2')
@@ -567,7 +448,8 @@
       
         // Set the min attribute of the end date input to the selected start date
         document.getElementById('endDate').min = startDate.toISOString().split('T')[0]
-      
+      Daily Summary
+
         // Trigger the searchTable function to update the table based on the new date range
         searchTable()
       }

@@ -54,6 +54,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="head" class="form-label">Head*</label>
                             <select id="head" name="head" class="form-select" required>
+                              <option class="form-control" value="{{ head_option.id }}">Select Head</option>
                               {% for head_option in heads %}
                                 <option class="form-control" value="{{ head_option.id }}">{{ head_option.name }}</option>
                               {% endfor %}
@@ -63,6 +64,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="subHead" class="form-label">Sub Head*</label>
                             <select id="subHead" name="subHead" class="form-select" required>
+                              <option class="form-control" value="{{ subhead_option.id }}">Select Option</option>
                               {% for subhead_option in subheads %}
                                 <option class="form-control" value="{{ subhead_option.id }}">{{ subhead_option.name }}</option>
                               {% endfor %}
@@ -72,6 +74,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="chargeBy" class="form-label">Charge By*</label>
                             <select id="chargeBy" name="chargeBy" class="form-select" required>
+                              <option>Select Option</option>
                               {% for charge_option in charges %}
                                 <option class="form-control" value="{{ charge_option.id }}">{{ charge_option.name }}</option>
                               {% endfor %}
@@ -81,6 +84,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="paidBy" class="form-label">Paid By*</label>
                             <select id="paidBy" name="paidBy" class="form-select" required>
+                              <option>Select Option</option>
                               {% for paid_option in paids %}
                                 <option class="form-control" value="{{ paid_option.id }}">{{ paid_option.name }}</option>
                               {% endfor %}
@@ -90,6 +94,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="claimBy" class="form-label">Claim By*</label>
                             <select id="claimBy" name="claimBy" class="form-select" required>
+                              <option>Select Option</option>
                               {% for claim_option in claims %}
                                 <option class="form-control" value="{{ claim_option.id }}">{{ claim_option.name }}</option>
                               {% endfor %}
@@ -103,6 +108,7 @@
                             </label>
 
                             <select id="vendors" name="vendors" class="form-select" required>
+                              <option>Select Vendors</option>
                               {% for vendor_option in vendors %}
                                 <option class="form-control" value="{{ vendor_option }}">{{ vendor_option }}</option>
                               {% endfor %}
@@ -151,7 +157,8 @@
                             <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter comments"></textarea>
                           </div>
                         </div>
-                        <button id="btn" type="submit" class="btn btn-outline-primary mt-3">Submit</button>
+                        <button id="btn" type="submit" class="btn btn-outline-primary mt-3 me-2">Submit</button>
+                        <a href="{% url 'submitfile' %}"><button id="btn" type="button" class="btn btn-outline-primary mt-3">Back</button></a>
                       </form>
                     </div>
                   </div>
@@ -209,61 +216,52 @@
           }
         }
       }
-
-
-
-        // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
-        $(document).ready(function () {
-          var selectedHeadId = $('#head').val();
       
-          $.ajax({
-            url: '{% url "get_subheads" %}',
-            data: { head_id: selectedHeadId },
-            dataType: 'json',
-            success: function (data) {
-              // Clear the current sub-head options
-              $('#subHead').empty();
+      // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
+      $(document).ready(function () {
+        var selectedHeadId = $('#head').val()
       
-              // Add the new sub-head options
-              for (var i = 0; i < data.length; i++) {
-                $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
-              }
-            },
-            error: function (xhr, status, error) {
-              console.error('Error fetching sub-heads:', error);
+        $.ajax({
+          url: '{% url "get_subheads" %}',
+          data: { head_id: selectedHeadId },
+          dataType: 'json',
+          success: function (data) {
+            // Clear the current sub-head options
+            $('#subHead').empty()
+      
+            // Add the new sub-head options
+            for (var i = 0; i < data.length; i++) {
+              $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>')
             }
-          });
-        });
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching sub-heads:', error)
+          }
+        })
+      })
       
-        // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
-        $('#head').on('change', function () {
-          var selectedHeadId = $(this).val();
+      // Use jQuery to make an AJAX call to fetch sub-heads based on the selected head
+      $('#head').on('change', function () {
+        var selectedHeadId = $(this).val()
       
-          $.ajax({
-            url: '{% url "get_subheads" %}',
-            data: { head_id: selectedHeadId },
-            dataType: 'json',
-            success: function (data) {
-              // Clear the current sub-head options
-              $('#subHead').empty();
+        $.ajax({
+          url: '{% url "get_subheads" %}',
+          data: { head_id: selectedHeadId },
+          dataType: 'json',
+          success: function (data) {
+            // Clear the current sub-head options
+            $('#subHead').empty()
       
-              // Add the new sub-head options
-              for (var i = 0; i < data.length; i++) {
-                $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>');
-              }
-            },
-            error: function (xhr, status, error) {
-              console.error('Error fetching sub-heads:', error);
+            // Add the new sub-head options
+            for (var i = 0; i < data.length; i++) {
+              $('#subHead').append('<option value="' + data[i].id + '">' + data[i].name + '</option>')
             }
-          });
-        });
-
-
-
-
-
-
-
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching sub-heads:', error)
+          }
+        })
+      })
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>

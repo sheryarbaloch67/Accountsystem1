@@ -21,15 +21,19 @@ from Accountsystem import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("",views.home,name="home"),
-    path('submit/', views.accounting_form, name='accounting'),
-    path('submitfile/', views.showresult, name='submitfile'),
-    path("editfile/<int:id>",views.edit,name="editfile"),
-    path("updatefile",views.ufile,name="updatefile"),
-    path('get_subheads/', views.get_subheads, name='get_subheads'),
-    path("signin",views.signin,name="signin"),
-    path("signout",views.signout,name="signout"),
+    path("admin/", admin.site.urls),
+    path("", views.showresult, name="submitfile"),
+    path("form", views.home, name="home"),
+    path("submit/", views.accounting_form, name="accounting"),
+    path("submitfile/", views.showresult, name="submitfile"),
+    path("editfile/<int:id>", views.edit, name="editfile"),
+    path("deletefile/<int:id>", views.deleterecord, name="deletefile"),
+    path("updatefile", views.ufile, name="updatefile"),
+    path("summaryfile", views.summary, name="summaryfile"),
+    path("summarytable", views.tsummary, name="summarytable"),
+    path("get_subheads/", views.get_subheads, name="get_subheads"),
+    path("signin", views.signin, name="signin"),
+    path("signout", views.signout, name="signout"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
