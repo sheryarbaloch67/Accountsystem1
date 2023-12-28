@@ -76,7 +76,7 @@
         line-height: 1.5;
         color: #5a6a85;
         border-radius: 50px;
-        background-color: transparent;
+        background-color: #fff;
         background-clip: padding-box;
         border: var(--bs-border-width) solid #dfe5ef;
       }
@@ -89,9 +89,15 @@
       .hiddenDetails.show {
         max-height: 500px; /* Set an appropriate max-height value */
       }
+      thead {
+        background-color: #f2f2f2;
+      }
       th {
         width: fit-content;
         text-align: center;
+      }
+      th:hover {
+        background-color: #e2e0e0;
       }
       
       td.vendor,
@@ -101,33 +107,35 @@
         overflow: hidden;
         margin-right: 20px;
       }
-      .headers {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-        width: fit-content;
-        margin-left: 10px;
-      }
       
       .search-input1 {
         padding: 8px 16px;
         font-size: 0.875rem;
         font-weight: 400;
         color: #5a6a85;
-        border-radius: 50px;
-        background-color: transparent;
+        border-radius: 5px;
+        background-color: #fff;
         border: var(--bs-border-width) solid #dfe5ef;
       }
-      #receiptNumberInput {
-        width: 120px;
+      #receiptNumberInput,
+      .receiptNumberInput.dropdown-menu {
+        min-width: 145px !important;
+        width: 145px;
       }
-      #voucherInput {
-        width: 75px;
-      }
-      #instrumentInput {
+      #voucherInput,
+      .voucherInput.dropdown-menu {
+        min-width: 85px !important;
         width: 85px;
       }
-      #vendorInput {
-        width: 70px;
+      #instrumentInput,
+      .instrumentInput.dropdown-menu {
+        min-width: 105px !important;
+        width: 105px;
+      }
+      #vendorInput,
+      .vendorInput.dropdown-menu {
+        min-width: 73px !important;
+        width: 73px;
       }
       .hidden {
         display: none;
@@ -142,14 +150,13 @@
       <div class="body-wrapper">
         <div class="container-fluid">
           <div class="card my-navbar">
-            <div class="card-body d-flex justify-content-between">
-              <div class="search-bar">
-                {% comment %} <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" class="search-input me-2" oninput="searchTable()" placeholder="" /> {% endcomment %}
-                <input type="date" id="dateInput" oninput="searchTabledate()" class="date-input me-2 mb-2" placeholder="Select start date" />
-                <input type="date" id="endDate" class="date-input" oninput="searchTabledate()" />
-              </div>
+            <div class="card-body d-flex justify-content-between align-items-center">
               <div>
+                <h4 class="m-0" style="word-spacing: 3px;">Hello <span class="text-primary">{{ user.first_name }}</span></h4>
+              </div>
+              <div class="d-flex align-items-center justify-content-end">
+                <img src="{% static 'images/logos/favicon.png' %}" height="35" class="me-2" />
+                <img src="{% static 'images/logos/btfavicon.png' %}" height="35" class="me-2" />
                 <a class="" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
                   <div class="message-body">
@@ -160,14 +167,22 @@
             </div>
           </div>
         </div>
-        <div class="container-fluid">
+        <div class="container-fluid d-flex justify-content-between align-items-center pt-0 pb-0 mb-0 mt-0">
+          <div class="ms-4">
+            {% comment %} <label for="searchInput">Search:</label>
+            <input type="text" id="searchInput" class="search-input me-2" oninput="searchTable()" placeholder="" /> {% endcomment %}
+            <input type="date" id="dateInput" oninput="searchTabledate()" class="date-input me-2 mb-2" placeholder="Select start date" />
+            <input type="date" id="endDate" class="date-input" oninput="searchTabledate()" />
+          </div>
+          <div class="me-4">
+            <a href="{% url 'home' %}" class="btn btn-outline-primary"><i class="ti ti-plus"></i>New</a>
+            {% comment %} <button id="toggleSearch" class="btn btn-primary text-primary me-1" style="background-color: transparent; border: none; margin-top: 2px; padding: 0; font-size: 1.3rem;"><i class="ti ti-search"></i></button> {% endcomment %}
+            {% comment %} <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-plus"></i></a> {% endcomment %}
+          </div>
+        </div>
+        <div class="container-fluid pt-3">
           <div class="card">
-            <div class="card-body pt-2">
-              <div class="d-flex justify-content-end align-items-center">
-                {% comment %} <a href="{% url 'home' %}" class="btn btn-outline-primary"><i class="ti ti-plus"></i>New</a> {% endcomment %}
-                <button id="toggleSearch" class="btn btn-primary text-primary me-1" style="background-color: transparent; border: none; margin-top: 2px; padding: 0; font-size: 1.3rem;"><i class="ti ti-search"></i></button>
-                <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-plus"></i></a>
-              </div>
+            <div class="card-body">
               <div class="table-responsive">
                 <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
                   <thead class="text-dark fs-4 text-center">
@@ -180,26 +195,26 @@
                       <th>Amount</th>
                       <th>Head</th>
                       <th>Sub Head</th>
-                      <th class="text-center">
-                        <input type="text" id="receiptNumberInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Receipt Number</p>
+                      <th>
+                        Reciept Number <a id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></a>
+                        <input type="text" id="receiptNumberInput" class="search-input1 receiptNumberInput dropdown-menu dropdown-menu-end mt-1" aria-labelledby="drop2" oninput="searchTableByColumn(this)" placeholder="🔍  Search" />
                       </th>
                       <th>
-                        <input type="text" id="voucherInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Voucher</p>
+                        Voucher <button id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></button>
+                        <input type="text" id="voucherInput" class="search-input1 voucherInput dropdown-menu dropdown-menu-end mt-1" aria-labelledby="drop2" oninput="searchTableByColumn(this)" placeholder="🔍  Search" />
                       </th>
                       <th>
-                        <input type="text" id="instrumentInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Instrument</p>
+                        Instrument <button id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></button>
+                        <input type="text" id="instrumentInput" class="search-input1 instrumentInput dropdown-menu dropdown-menu-end mt-1" aria-labelledby="drop2" oninput="searchTableByColumn(this)" placeholder="🔍  Search" />
                       </th>
                       <th>
-                        <input type="text" id="vendorInput" class="search-input1 hidden" oninput="searchTableByColumn(this)" placeholder="" />
-                        <p class="headers">Vendor</p>
+                        Vendor <button id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></button>
+                        <input type="text" id="vendorInput" class="search-input1 vendorInput dropdown-menu dropdown-menu-end mt-1" aria-labelledby="drop2" oninput="searchTableByColumn(this)" placeholder="🔍  Search" />
                       </th>
                       <th>
                         <div class="d-flex justify-content-center">
                           <div>
-                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><strong><i class="ti ti-dots-vertical" style="font-size: 1rem;"></i></strong></a>
+                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><strong><i class="ti ti-dots" style="font-size: 1rem;"></i></strong></a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
                               <div class="message-body d-flex flex-column justify-content-left align-items-center">
                                 <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
@@ -212,10 +227,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for entry in accounting_form|slice:'-10:' %}
+                    {% for entry in accounting_form|slice:':' %}
                       <tr class="text-center">
                         <td>{{ entry.date }}</td>
-
                         <td>{{ entry.amount }}</td>
                         <td>{{ entry.head.name }}</td>
                         <td>{{ entry.sub_head }}</td>
@@ -299,8 +313,8 @@
                   </select>
                 </div>
                 <div class="text-center mt-3">
-                  <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary mr-2" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-left toggle-buttons"></i></button>
-                  <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-arrow-right toggle-buttons"></i></button>
+                  <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-left toggle-buttons"></i></button>
+                  <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary me-3" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-right toggle-buttons"></i></button>
                 </div>
               </div>
             </div>
@@ -354,14 +368,6 @@
     </table>
 
     <script>
-      //search input hidden Toggle
-      document.getElementById('toggleSearch').addEventListener('click', function () {
-        var inputs = document.querySelectorAll('.search-input1')
-      
-        inputs.forEach(function (input) {
-          input.classList.toggle('hidden')
-        })
-      })
       //browse between 10 rows
       let startIndex = 0
       let rowsPerPage = 50
@@ -458,7 +464,7 @@
         var startDateInput = document.getElementById('dateInput')
         var endDateInput = document.getElementById('endDate')
         var startFilter = new Date(startDateInput.value)
-        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000) // Add 24 hours to include the entire selected end date
+        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400) // Add 24 hours to include the entire selected end date
       
         var table = document.getElementById('accounting-table')
         var tr = table.getElementsByTagName('tr')

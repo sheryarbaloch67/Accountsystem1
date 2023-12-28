@@ -151,8 +151,10 @@
                           <textarea class="form-control" rows="4" id="comments" name="comments" placeholder="Please enter comments">{{ data.comments }}</textarea>
                         </div>
                       </div>                
-                      <button id="btn" type="submit" class="btn btn-outline-primary mt-3 me-2">Submit</button>
-                      <a href="{% url 'submitfile' %}"><button id="btn" type="button" class="btn btn-outline-primary mt-3">Back</button></a>
+                      <div class="d-flex justify-content-end">
+                        <a href="{% url 'submitfile' %}"><button id="btn" type="button" class="btn btn-outline-primary mt-3 me-2">Back</button></a>
+                        <button id="btn" type="submit" class="btn btn-outline-primary mt-3">Submit</button>
+                      </div>
                     </form>
                     </div>
                   </div>

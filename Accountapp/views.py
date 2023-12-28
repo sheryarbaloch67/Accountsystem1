@@ -257,7 +257,7 @@ def summary(request):
 
     amount = 0
     cash = 0
-    checque = 0
+    cheque = 0
     online = 0
     xcount = 0
     bcount = 0
@@ -266,7 +266,7 @@ def summary(request):
         if i.instrument == "cash":
             cash = cash + 1
         elif i.instrument == "cheque":
-            checque = checque + 1
+            cheque = cheque + 1
         else:
             online = online + 1
         if i.charge_by == "xabta" or i.charge_by == "Xabta" or i.charge_by == "XABTA":
@@ -314,6 +314,7 @@ def tsummary(request):
 
 @login_required(login_url="signin")
 def showresult(request):
+    user = request.user
     accounting_form = AccountingEntry.objects.all().order_by("-id")
     # for i in accounting_form:
     #     print(i.date)
