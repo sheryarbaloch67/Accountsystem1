@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Daily Summary</title>
     {% load static %}
+    {% load humanize %}
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
@@ -88,12 +89,12 @@
                           </td>
                         </tr>
                         <tr>
-                          <td>Reference No</td>
+                          <td>Reference#</td>
                           <td id="formattedDate"></td>
                         </tr>
                         <tr>
                           <td>Net Amount</td>
-                          <td>{{ amount }}</td>
+                          <td>{{ amount|floatformat:2|intcomma }}</td>
                         </tr>
                         <tr>
                           <td>Comments</td>
@@ -132,17 +133,17 @@
                       <th>Amount</th>
                       <th>Head</th>
                       <th>Sub Head</th>
-                      <th>Receipt Number</th>
+                      <th>Receipt#</th>
                       <th>Voucher</th>
                       <th>Instrument</th>
-                      <th>charge by</th>
+                      <th>Charge To</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for entry in todayentry|slice:':' %}
                       <tr class="text-center">
                         <td>{{ entry.date }}</td>
-                        <td>{{ entry.amount }}</td>
+                        <td>{{ entry.amount|floatformat:2|intcomma }}</td>
                         <td>{{ entry.head.name }}</td>
                         <td>{{ entry.sub_head }}</td>
                         <td>{{ entry.receipt_number }}</td>
@@ -159,7 +160,7 @@
                     {% endfor %}
                     <tr class="text-center">
                       <td>Net Amount</td>
-                      <td>{{ amount }}</td>
+                      <td>{{ amount|floatformat:2|intcomma }}</td>
                     </tr>
                   </tbody>
                 </table>

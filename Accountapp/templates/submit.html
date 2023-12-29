@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Table</title>
     {% load static %}
+    {% load humanize %}
 
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -230,7 +231,7 @@
                     {% for entry in accounting_form|slice:':' %}
                       <tr class="text-center">
                         <td>{{ entry.date }}</td>
-                        <td>{{ entry.amount }}</td>
+                        <td>{{ entry.amount|floatformat:2|intcomma }}</td>
                         <td>{{ entry.head.name }}</td>
                         <td>{{ entry.sub_head }}</td>
                         <td>{{ entry.receipt_number }}</td>
@@ -258,7 +259,7 @@
                         <td colspan="5" class="hiddenDetails-content text-left">
                           <div class="row">
                             <div class="col-md-2 mb-1">
-                              <strong>Charge By:</strong>
+                              <strong>Charge To:</strong>
                             </div>
                             <div class="col-md-9">{{ entry.charge_by.name }}</div>
                           </div>
@@ -331,8 +332,8 @@
           <th>Head</th>
           <th>Sub Head</th>
           <th>Description</th>
-          <th>Receipt Number</th>
-          <th>Charge By</th>
+          <th>Receipt#</th>
+          <th>Charge To</th>
           <th>Voucher</th>
           <th>Paid By</th>
           <th>Claim By</th>
@@ -432,7 +433,7 @@
           var amountTd = tr[i].getElementsByTagName('td')[1] // Assuming Index 1 corresponds to the Amount column
           var headTd = tr[i].getElementsByTagName('td')[2] // Assuming Index 2 corresponds to the Head column
           var subHeadTd = tr[i].getElementsByTagName('td')[3] // Assuming Index 3 corresponds to the Sub Head column
-          var receiptTd = tr[i].getElementsByTagName('td')[4] // Assuming Index 4 corresponds to the Receipt Number column
+          var receiptTd = tr[i].getElementsByTagName('td')[4] // Assuming Index 4 corresponds to the Receipt# column
           var voucherTd = tr[i].getElementsByTagName('td')[5] // Assuming Index 5 corresponds to the Voucher column
           var instrumentTd = tr[i].getElementsByTagName('td')[6] // Assuming Index 6 corresponds to the Instrument column
       

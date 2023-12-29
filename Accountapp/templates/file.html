@@ -47,8 +47,8 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="receiptNumber" class="form-label">Receipt Number*</label>
-                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid receipt number" required />
+                            <label for="receiptNumber" class="form-label">Receipt#*</label>
+                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid Receipt#" required />
                           </div>
 
                           <div class="mb-3 col-md-6">
@@ -72,7 +72,7 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label for="chargeBy" class="form-label">Charge By*</label>
+                            <label for="chargeBy" class="form-label">Charge To*</label>
                             <select id="chargeBy" name="chargeBy" class="form-select" required>
                               <option>Select Option</option>
                               {% for charge_option in charges %}
@@ -172,6 +172,13 @@
       </div>
     </div>
     <script>
+      document.getElementById('amount').addEventListener('input', function (event) {
+        formatCurrency(event.target)
+      })
+      function formatCurrency(inputField) {
+        let inputValue = inputField.value.replace(/[^\d]/g, '') // Remove non-numeric characters
+        inputField.value = inputValue
+      }
       function toggleInstrumentFields() {
         var instrument = document.getElementById('instrument').value
         var cashFields = document.getElementById('cashFields')

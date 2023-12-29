@@ -48,7 +48,7 @@
                         </div>
                 
                         <div class="mb-3 col-md-6">
-                            <label for="receiptNumber" class="form-label">Receipt Number*</label>
+                            <label for="receiptNumber" class="form-label">Receipt#*</label>
                             <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" value="{{ data.receipt_number }}" required />
                         </div>
                 
@@ -87,7 +87,7 @@
                         </div>
                 
                         <div class="mb-3 col-md-6">
-                            <label for="chargeBy" class="form-label">Charge By*</label>
+                            <label for="chargeBy" class="form-label">Charge To*</label>
                             <select id="chargeBy" name="chargeBy" class="form-select" required>
                                 {% for charge_option in charges %}
                                     <option class="form-control" value="{{ charge_option.id }}" {% if charge_option.id == data.charge_by.id %}selected{% endif %}>
