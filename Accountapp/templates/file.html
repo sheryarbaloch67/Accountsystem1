@@ -184,21 +184,41 @@
         var onlineFields = document.getElementById('onlineFields')
         var hiddenField = document.getElementById('hiddenField')
       
+        // Reset 'required' attribute for all fields
+        document.getElementById('cashNumber').removeAttribute('required')
+        document.getElementById('chequeNumber').removeAttribute('required')
+        document.getElementById('onlineNumber').removeAttribute('required')
+      
         if (instrument === 'cash') {
           cashFields.style.display = 'block'
           chequeFields.style.display = 'none'
           onlineFields.style.display = 'none'
           hiddenField.style.display = 'block'
+      
+          // Set 'required' attribute for the selected field
+          document.getElementById('cashNumber').setAttribute('required', 'required')
         } else if (instrument === 'cheque') {
           cashFields.style.display = 'none'
           chequeFields.style.display = 'block'
           onlineFields.style.display = 'none'
           hiddenField.style.display = 'block'
+      
+          // Set 'required' attribute for the selected field
+          document.getElementById('chequeNumber').setAttribute('required', 'required')
         } else if (instrument === 'online') {
           cashFields.style.display = 'none'
           chequeFields.style.display = 'none'
           onlineFields.style.display = 'block'
           hiddenField.style.display = 'block'
+      
+          // Set 'required' attribute for the selected field
+          document.getElementById('onlineNumber').setAttribute('required', 'required')
+        } else {
+          // If none is selected, hide all fields and reset 'required' attribute
+          cashFields.style.display = 'none'
+          chequeFields.style.display = 'none'
+          onlineFields.style.display = 'none'
+          hiddenField.style.display = 'none'
         }
       }
       

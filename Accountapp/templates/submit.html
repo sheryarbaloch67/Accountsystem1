@@ -138,6 +138,12 @@
         min-width: 80px !important;
         width: 80px;
       }
+      .actions.dropdown-menu,
+      .logout.dropdown-menu {
+        min-width: fit-content !important;
+        margin: 0px !important;
+        padding: 0px !important;
+      }
       .hidden {
         display: none;
       }
@@ -159,9 +165,9 @@
                 <img src="{% static 'images/logos/btfavicon1.png' %}" height="35" class="me-3" />
                 <img src="{% static 'images/logos/logo1.png' %}" height="30" class="me-3" />
                 <a class="" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
+                <div class="logout dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="{% url 'signout' %}" class="btn btn-outline-primary mx-3 d-block">Logout <i class="ti ti-logout" style="font-size: 1.1rem;"></i></a>
+                    <a href="{% url 'signout' %}" class="btn btn-outline-primary d-block" style="border: none; width: 100%;">Logout <i class="ti ti-logout" style="font-size: 1.1rem;"></i></a>
                   </div>
                 </div>
               </div>
@@ -176,7 +182,7 @@
             <input type="date" id="endDate" class="date-input" oninput="searchTabledate()" />
           </div>
           <div class="me-4">
-            <a href="{% url 'home' %}" class="btn btn-outline-primary"><i class="ti ti-plus"></i>New</a>
+            <a href="{% url 'home' %}" class="btn btn-outline-primary me-1"><i class="ti ti-plus"></i>New</a>
             {% comment %} <button id="toggleSearch" class="btn btn-primary text-primary me-1" style="background-color: transparent; border: none; margin-top: 2px; padding: 0; font-size: 1.3rem;"><i class="ti ti-search"></i></button> {% endcomment %}
             {% comment %} <a href="{% url 'home' %}" class="text-primary" style="font-size: 1.5rem;"><i class="ti ti-plus"></i></a> {% endcomment %}
           </div>
@@ -215,11 +221,11 @@
                       <th>
                         <div class="d-flex justify-content-center">
                           <div>
-                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><strong><i class="ti ti-dots" style="font-size: 1rem;"></i></strong></a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
-                              <div class="message-body d-flex flex-column justify-content-left align-items-center">
-                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem;"><i class="ti ti-download"></i> CSV</button>
-                                <a href="{% url 'summaryfile' %}" class="btn btn-outline-primary d-block mt-2" style="font-size: 0.9rem;"><i class="ti ti-download"></i> Summary</a>
+                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots" style="font-size: 1rem;"></i></a>
+                            <div class="actions dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
+                              <div class="d-flex flex-column justify-content-left align-items-center">
+                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem; border: none; width: 100%;"><i class="ti ti-download"></i> CSV</button>
+                                <a href="{% url 'summaryfile' %}" class="btn btn-outline-primary d-block" style="font-size: 0.9rem; border: none;"><i class="ti ti-download"></i> Summary</a>
                               </div>
                             </div>
                           </div>

@@ -131,7 +131,7 @@
                         </div>
 
                         <div id="cashFields" class="mb-3 col-md-6">
-                          <label for="cashNumber" class="form-label">{{ data.instrument }} #:*</label>
+                          <label for="cashNumber" class="form-label">{{ data.instrument }} #*</label>
                           {% if data.instrument == 'cash' %}
                               <input type="text" id="cashNumber" name="cashNumber" class="form-control" value="{{ data.cash_number }}" />
                           {% elif data.instrument == 'cheque' %}
