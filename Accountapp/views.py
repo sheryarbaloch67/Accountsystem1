@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.http import JsonResponse
+import inflect
 
 
 # Create your views here.
@@ -207,8 +208,6 @@ def ufile(request):
             entry.voucher = vocher
 
             vendors_ids = request.POST["vendors"]
-            print(type(vendors_ids))
-            print(vendors_ids)
 
             if vendors_ids:
                 if not Vendor.objects.filter(name=vendors_ids).exists():
@@ -253,8 +252,6 @@ def get_subheads(request):
 def summary(request):
     today = date.today()
     todayentry = AccountingEntry.objects.filter(date=today)
-    # print(todayentry)
-
     amount = 0
     cash = 0
     cheque = 0
@@ -273,7 +270,6 @@ def summary(request):
             xcount = xcount + 1
         elif i.charge_by == "bt" or i.charge_by == "Bt" or i.charge_by == "BT":
             bcount = bcount + 1
-        # print(i.charge_by)
 
     for j in todayentry:
         if (
@@ -288,18 +284,16 @@ def summary(request):
             or str(j.charge_by) == "BT"
         ):
             bcount = bcount + 1
-        print(j.charge_by)
-
-    print(xcount)
 
     if xcount != 0 and bcount != 0:
         logo = "showboth"
     elif xcount != 0 and bcount == 0:
         logo = "showxabta"
-    else:
+    elif xcount == 0 and bcount != 0:
         logo = "showbt"
 
-    print(todayentry)
+    p = inflect.engine()
+    amount_in_words = p.number_to_words(int(amount)).title() + " Rupees"
 
     return render(request, "summary.html", locals())
 

@@ -54,7 +54,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="head" class="form-label">Head*</label>
                             <select id="head" name="head" class="form-select" required>
-                              <option class="form-control" value="{{ head_option.id }}">Select Head</option>
+                              <option value="" selected disabled>Select Head</option>
                               {% for head_option in heads %}
                                 <option class="form-control" value="{{ head_option.id }}">{{ head_option.name }}</option>
                               {% endfor %}
@@ -64,7 +64,6 @@
                           <div class="mb-3 col-md-6">
                             <label for="subHead" class="form-label">Sub Head*</label>
                             <select id="subHead" name="subHead" class="form-select" required>
-                              <option class="form-control" value="{{ subhead_option.id }}">Select Option</option>
                               {% for subhead_option in subheads %}
                                 <option class="form-control" value="{{ subhead_option.id }}">{{ subhead_option.name }}</option>
                               {% endfor %}
@@ -74,7 +73,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="chargeBy" class="form-label">Charge To*</label>
                             <select id="chargeBy" name="chargeBy" class="form-select" required>
-                              <option>Select Option</option>
+                              <option value="" selected disabled>Select Option</option>
                               {% for charge_option in charges %}
                                 <option class="form-control" value="{{ charge_option.id }}">{{ charge_option.name }}</option>
                               {% endfor %}
@@ -84,7 +83,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="paidBy" class="form-label">Paid By*</label>
                             <select id="paidBy" name="paidBy" class="form-select" required>
-                              <option>Select Option</option>
+                              <option value="" selected disabled>Select Option</option>
                               {% for paid_option in paids %}
                                 <option class="form-control" value="{{ paid_option.id }}">{{ paid_option.name }}</option>
                               {% endfor %}
@@ -94,7 +93,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="claimBy" class="form-label">Claim By*</label>
                             <select id="claimBy" name="claimBy" class="form-select" required>
-                              <option>Select Option</option>
+                              <option value="" selected disabled>Select Option</option>
                               {% for claim_option in claims %}
                                 <option class="form-control" value="{{ claim_option.id }}">{{ claim_option.name }}</option>
                               {% endfor %}
@@ -104,11 +103,10 @@
                           <div class="mb-3 col-md-6">
                             <label for="vendors" class="form-label">
                               Vendors*
-                              <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-square-plus" style="font-size: 1.1rem;"></i></button>
+                              <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-plus" style="font-size: 1.1rem;"></i></button>
                             </label>
-
                             <select id="vendors" name="vendors" class="form-select" required>
-                              <option>Select Vendors</option>
+                              <option value="" selected disabled>Select Vendors</option>
                               {% for vendor_option in vendors %}
                                 <option class="form-control" value="{{ vendor_option }}">{{ vendor_option }}</option>
                               {% endfor %}
@@ -123,7 +121,7 @@
                           <div class="mb-3 col-md-6">
                             <label for="instrument" class="form-label">Instrument*</label>
                             <select id="instrument" name="instrument" class="form-select" onchange="toggleInstrumentFields()" required>
-                              <option class="form-control" value="">Select instrument</option>
+                              <option value="" selected disabled>Select Instrument</option>
                               <option class="form-control" value="cash">Cash</option>
                               <option class="form-control" value="cheque">Cheque</option>
                               <option class="form-control" value="online">Online Transfer</option>
@@ -131,18 +129,18 @@
                           </div>
 
                           <div id="cashFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="cashNumber" class="form-label">Cash Number*</label>
-                            <input type="text" id="cashNumber" name="cashNumber" class="form-control" />
+                            <label for="cashNumber" class="form-label">Cash#*</label>
+                            <input type="text" id="cashNumber" name="cashNumber" class="form-control" placeholder="Please enter a valid Cash#" />
                           </div>
 
                           <div id="chequeFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="chequeNumber" class="form-label">Cheque Number*</label>
-                            <input type="text" id="chequeNumber" name="chequeNumber" class="form-control" />
+                            <label for="chequeNumber" class="form-label">Cheque#*</label>
+                            <input type="text" id="chequeNumber" name="chequeNumber" class="form-control" placeholder="Please enter a valid Cheque#" />
                           </div>
 
                           <div id="onlineFields" style="display: none;" class="mb-3 col-md-6">
-                            <label for="onlineNumber" class="form-label">Online Transfer Number*</label>
-                            <input type="text" id="onlineNumber" name="onlineNumber" class="form-control" />
+                            <label for="onlineNumber" class="form-label">Online Transfer#*</label>
+                            <input type="text" id="onlineNumber" name="onlineNumber" class="form-control" placeholder="Please enter a valid Online Transfer#" />
                           </div>
 
                           <div id="hiddenField" style="display: none; visibility: hidden;" class="mb-3 col-md-6"></div>

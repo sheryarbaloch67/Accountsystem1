@@ -112,7 +112,7 @@
                           <label for="vendors" class="form-label">
                             Vendors*
                             <button type="button" class="add-vendor-button text-primary" onclick="addVendor()" style="background-color: transparent; border: none; padding: 0;">
-                              <i class="ti ti-square-plus" style="font-size: 1.1rem;"></i>
+                              <i class="ti ti-plus" style="font-size: 1.1rem;"></i>
                             </button>
                           </label>
                         
@@ -131,7 +131,7 @@
                         </div>
 
                         <div id="cashFields" class="mb-3 col-md-6">
-                          <label for="cashNumber" class="form-label">{{ data.instrument }} No:*</label>
+                          <label for="cashNumber" class="form-label">{{ data.instrument }} #:*</label>
                           {% if data.instrument == 'cash' %}
                               <input type="text" id="cashNumber" name="cashNumber" class="form-control" value="{{ data.cash_number }}" />
                           {% elif data.instrument == 'cheque' %}
