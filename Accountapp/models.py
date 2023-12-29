@@ -10,8 +10,12 @@ class Head(models.Model):
 
 
 class Shead(models.Model):
-    name = models.CharField(max_length=50)
     head = models.ForeignKey(Head, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Sub Head"
+        verbose_name_plural = "Sub Heads"
 
     def __str__(self):
         return self.name
@@ -20,6 +24,10 @@ class Shead(models.Model):
 class charge(models.Model):
     name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = "Charge To"
+        verbose_name_plural = "Charge To"
+
     def __str__(self):
         return self.name
 
@@ -27,12 +35,20 @@ class charge(models.Model):
 class claim(models.Model):
     name = models.CharField(max_length=50)
 
+    class Meta:
+        verbose_name = "Claim By"
+        verbose_name_plural = "Claim By"
+
     def __str__(self):
         return self.name
 
 
 class paid(models.Model):
     name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Paid By"
+        verbose_name_plural = "Paid By"
 
     def __str__(self):
         return self.name
@@ -47,7 +63,7 @@ class Vendor(models.Model):
 
 class AccountingEntry(models.Model):
     date = models.DateField(auto_now_add=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
     head = models.ForeignKey(Head, on_delete=models.CASCADE)
     sub_head = models.ForeignKey(Shead, on_delete=models.CASCADE)
     # sub_head = models.CharField(max_length=50)
