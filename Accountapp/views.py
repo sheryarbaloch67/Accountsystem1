@@ -221,6 +221,7 @@ def ufile(request):
 
             entry.vendors = vendors_ids
 
+            entry.instrument = request.POST.get("instrument")
             entry.cash_number = request.POST.get("cashNumber")
             entry.cheque_number = request.POST.get("chequeNumber")
             entry.online_number = request.POST.get("onlineNumber")
