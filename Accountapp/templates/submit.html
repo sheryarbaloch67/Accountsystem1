@@ -15,6 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
@@ -337,14 +338,15 @@
           <th>Amount</th>
           <th>Head</th>
           <th>Sub Head</th>
-          <th>Description</th>
           <th>Receipt#</th>
           <th>Charge To</th>
           <th>Voucher</th>
           <th>Paid By</th>
           <th>Claim By</th>
           <th>Instrument</th>
+          <th>Vendor</th>
           <th>Comments</th>
+          <th>Description</th>
         </tr>
       </thead>
       <tbody>
@@ -354,7 +356,6 @@
             <td>{{ entry.amount }}</td>
             <td>{{ entry.head.name }}</td>
             <td>{{ entry.sub_head }}</td>
-            <td>{{ entry.description }}</td>
             <td>{{ entry.receipt_number }}</td>
             <td>{{ entry.charge_by.name }}</td>
             <td>{{ entry.voucher }}</td>
@@ -367,14 +368,47 @@
             {% else %}
               <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
             {% endif %}
-
+            <td>{{ entry.vendors }}</td>
             <td>{{ entry.comments }}</td>
+            <td>{{ entry.description }}</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
 
     <script>
+      function downloadTable() {
+        const table = document.getElementById('accounting-table2')
+        const rows = table.querySelectorAll('tr')
+        let csvContent = '\uFEFF' // Add BOM for Excel compatibility
+      
+        rows.forEach((row) => {
+          const cells = row.querySelectorAll('td, th')
+          const rowData = Array.from(cells).map((cell) => {
+            let content = cell.textContent.trim()
+      
+            // Wrap the content in double quotes if it contains a comma
+            if (content.includes(',')) {
+              content = `"${content}"`
+            }
+      
+            return content
+          })
+      
+          csvContent += rowData.join(',') + '\n'
+        })
+      
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+      
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'accounting_entries.csv'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      }
+      
       //browse between 10 rows
       let startIndex = 0
       let rowsPerPage = 50
@@ -526,36 +560,6 @@
         }
       
         return columnMap[columnName]
-      }
-      
-      function downloadTable() {
-        const table = document.getElementById('accounting-table2')
-        const rows = table.querySelectorAll('tr')
-        let csvContent = 'data:text/csv;charset=utf-8,' + '\uFEFF' // Add BOM for Excel compatibility
-      
-        rows.forEach((row) => {
-          const cells = row.querySelectorAll('td, th')
-          const rowData = Array.from(cells).map((cell) => {
-            let content = cell.textContent.trim()
-      
-            // Wrap the content in double quotes if it contains a comma
-            if (content.includes(',')) {
-              content = `"${content}"`
-            }
-      
-            return content
-          })
-      
-          csvContent += rowData.join(',') + '\n'
-        })
-      
-        const encodedUri = encodeURI(csvContent)
-        const link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
-        link.setAttribute('download', 'accounting_entries.csv')
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
       }
       
       function updateSearchInputWithDate() {
