@@ -28,10 +28,19 @@
       .main-card {
         background-color: #fcfcfc !important;
       }
+      thead {
+        background-color: #f2f2f2;
+      }
+      th {
+        width: fit-content;
+        text-align: center;
+        padding-top: 13px !important;
+        padding-bottom: 13px !important;
+        font-size: 14px !important;
+      }
       @media print {
         .container-fluid {
           page-break-before: always;
-          margin-top: 50px; /* Adjust this value to set the desired margin */
         }
       }
     </style>
@@ -111,13 +120,18 @@
                         <tr>
                           <td>Item Purchased</td>
                           <td>
-                            {% for i in todayentry %}
-                              {{ i.head.name }},
+                            {% for item_name, count in item_counts_dict.items %}
+                              {{ item_name }}{% if count > 1 %}
+                                ({{ count }})
+                              {% else %}
+                                (1)
+                              {% endif %}
+                              {% if not forloop.last %}, {% endif %}
                             {% endfor %}
                           </td>
                         </tr>
                         <tr>
-                          <td>Reference#</td>
+                          <td>Reference #</td>
                           <td id="formattedDate"></td>
                         </tr>
                         <tr>
@@ -152,7 +166,7 @@
         </div>
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body pt-2">
+            <div class="card-body ps-0 pe-0 pt-2">
               <div class="table-responsive">
                 <table id="accounting-table" class="table text-nowrap mb-0 align-middle">
                   <thead class="text-dark fs-4 text-center">
@@ -161,7 +175,7 @@
                       <th>Amount</th>
                       <th>Head</th>
                       <th>Sub Head</th>
-                      <th>Receipt#</th>
+                      <th>Receipt #</th>
                       <th>Voucher</th>
                       <th>Instrument</th>
                       <th>Charge To</th>

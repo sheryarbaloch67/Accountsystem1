@@ -97,6 +97,9 @@
       th {
         width: fit-content;
         text-align: center;
+        padding-top: 13px !important;
+        padding-bottom: 13px !important;
+        font-size: 14px !important;
       }
       th:hover {
         background-color: #e2e0e0;
@@ -204,7 +207,7 @@
                       <th>Head</th>
                       <th>Sub Head</th>
                       <th>
-                        Reciept# <a id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></a>
+                        Reciept # <a id="drop2" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0; margin: -2px -6px -3px 0px;"><i class="ti ti-chevron-down"></i></a>
                         <input type="text" id="receiptNumberInput" class="search-input1 receiptNumberInput dropdown-menu dropdown-menu-end mt-1" aria-labelledby="drop2" oninput="searchTableByColumn(this)" placeholder="Search" />
                       </th>
                       <th>
@@ -312,7 +315,7 @@
                 </table>
               </div>
               <div class="d-flex align-items-center justify-content-end">
-                <div class="text-center mt-3 me-2">
+                <div class="text-center mt-5 me-2">
                   <select id="recordsPerPage" class="form-select" onchange="updateTableRows()">
                     <option value="50" selected>25</option>
                     <option value="100">50</option>
@@ -320,7 +323,7 @@
                     <option value="all">All</option>
                   </select>
                 </div>
-                <div class="text-center mt-3">
+                <div class="text-center mt-5">
                   <button onclick="loadPreviousRows()" id="loadPreviousButton" class="btn btn-primary text-primary" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-left toggle-buttons"></i></button>
                   <button onclick="loadNextRows()" id="loadNextButton" class="btn btn-primary text-primary me-3" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-right toggle-buttons"></i></button>
                 </div>

@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.http import JsonResponse
 import inflect
+from collections import Counter
 
 
 # Create your views here.
@@ -259,6 +260,7 @@ def summary(request):
     online = 0
     xcount = 0
     bcount = 0
+    item_counts = Counter()
     for i in todayentry:
         amount = amount + i.amount
         if i.instrument == "cash":
@@ -286,6 +288,10 @@ def summary(request):
         ):
             bcount = bcount + 1
 
+    for k in todayentry:
+        # Count items for the item_counts dictionary
+        item_counts[k.head.name] += 1
+
     if xcount != 0 and bcount != 0:
         logo = "showboth"
     elif xcount != 0 and bcount == 0:
@@ -295,6 +301,9 @@ def summary(request):
 
     p = inflect.engine()
     amount_in_words = p.number_to_words(int(amount)).title() + " Rupees"
+
+    # Convert item_counts to a dictionary for use in the template
+    item_counts_dict = dict(item_counts)
 
     return render(request, "summary.html", locals())
 
