@@ -92,11 +92,12 @@ class AccountingEntry(models.Model):
         max_length=10,
         null=True,
         blank=True,
-        choices=[("cash", "Cash"), ("cheque", "Cheque"), ("online", "Online Transfer")],
+        choices=[("cash", "Cash"), ("cheque", "Cheque"), ("online", "Online Transfer"),("card","Card")],
     )
     cash_number = models.CharField(max_length=20, default=0, null=True, blank=True)
     cheque_number = models.CharField(max_length=20, default=0, null=True, blank=True)
     online_number = models.CharField(max_length=20, default=0, null=True, blank=True)
+    card_number = models.CharField(max_length=4, default=0, null=True, blank=True)
     vendors = models.ForeignKey(Vendor, null=True, blank=True, on_delete=models.CASCADE)
 
     attachments = models.FileField(upload_to="attachments/", null=True, blank=True)

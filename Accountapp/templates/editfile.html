@@ -147,6 +147,7 @@
                             <option class="form-control" value="cash" {% if data.instrument == "cash" %}selected{% endif %}>Cash</option>
                             <option class="form-control" value="cheque" {% if data.instrument == "cheque" %}selected{% endif %}>Cheque</option>
                             <option class="form-control" value="online" {% if data.instrument == "online" %}selected{% endif %}>Online Transfer</option>
+                            <option class="form-control" value="card" {% if data.instrument == "card" %}selected{% endif %}>Card</option>
                           </select>
                         </div>
 
@@ -163,6 +164,11 @@
                         <div id="onlineFields" style="display: none;" class="mb-3 col-md-6">
                           <label for="onlineNumber" class="form-label">Online Transfer#*</label>
                           <input type="text" id="onlineNumber" name="onlineNumber" class="form-control" placeholder="Please enter a valid Online Transfer#" value="{{ data.online_number }}"/>
+                        </div>
+
+                        <div id="cardFields" style="display: none;" class="mb-3 col-md-6">
+                          <label for="cardNumber" class="form-label">Card#*</label>
+                          <input type="text" id="cardNumber" name="cardNumber" class="form-control" placeholder="Please enter a valid card#" value="{{ data.card_number }}"/>
                         </div>
 
                         <div id="hiddenField" style="display: none; visibility: hidden;" class="mb-3 col-md-6"></div>
@@ -200,23 +206,27 @@
         var cashFields = document.getElementById('cashFields')
         var chequeFields = document.getElementById('chequeFields')
         var onlineFields = document.getElementById('onlineFields')
+        var cardFields = document.getElementById('cardFields')
         var hiddenField = document.getElementById('hiddenField')
       
         // Reset 'required' attribute for all fields
         document.getElementById('cashNumber').removeAttribute('required')
         document.getElementById('chequeNumber').removeAttribute('required')
         document.getElementById('onlineNumber').removeAttribute('required')
+        document.getElementById('cardNumber').removeAttribute('required')
       
         if (instrument === 'cash') {
           cashFields.style.display = 'block'
           chequeFields.style.display = 'none'
           onlineFields.style.display = 'none'
+          cardFields.style.display = 'none'
           hiddenField.style.display = 'block'
       
           // Set 'required' attribute for the selected field
           document.getElementById('cashNumber').setAttribute('required', 'required')
         } else if (instrument === 'cheque') {
           cashFields.style.display = 'none'
+          cardFields.style.display = 'none'
           chequeFields.style.display = 'block'
           onlineFields.style.display = 'none'
           hiddenField.style.display = 'block'
@@ -226,16 +236,31 @@
         } else if (instrument === 'online') {
           cashFields.style.display = 'none'
           chequeFields.style.display = 'none'
+          cardFields.style.display = 'none'
           onlineFields.style.display = 'block'
           hiddenField.style.display = 'block'
       
           // Set 'required' attribute for the selected field
           document.getElementById('onlineNumber').setAttribute('required', 'required')
+
+        }
+
+          else if (instrument === 'card') {
+            cashFields.style.display = 'none'
+            chequeFields.style.display = 'none'
+            onlineFields.style.display = 'none'
+            cardFields.style.display = 'block'
+            hiddenField.style.display = 'block'
+        
+            // Set 'required' attribute for the selected field
+            document.getElementById('cardNumber').setAttribute('required', 'required')
+      
         } else {
           // If none is selected, hide all fields and reset 'required' attribute
           cashFields.style.display = 'none'
           chequeFields.style.display = 'none'
           onlineFields.style.display = 'none'
+          cardFields.style.display = 'none'
           hiddenField.style.display = 'none'
         }
       }

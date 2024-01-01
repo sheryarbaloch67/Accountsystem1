@@ -115,6 +115,9 @@
                             {% if online %}
                               online: ({{ online }}),
                             {% endif %}
+                            {% if card %}
+                              card: ({{ card }}),
+                            {% endif %}
                           </td>
                         </tr>
                         <tr>
@@ -194,6 +197,8 @@
                           <td>{{ entry.instrument }}-{{ entry.cash_number }}</td>
                         {% elif entry.instrument == 'Cheque' or entry.instrument == 'cheque' %}
                           <td>{{ entry.instrument }}-{{ entry.cheque_number }}</td>
+                        {% elif entry.instrument == 'card' or entry.instrument == 'Card' %}
+                          <td>{{ entry.instrument }}-{{ entry.card_number }}</td>
                         {% else %}
                           <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
                         {% endif %}

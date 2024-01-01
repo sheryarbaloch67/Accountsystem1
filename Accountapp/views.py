@@ -74,6 +74,7 @@ def accounting_form(request):
         cash_number = request.POST.get("cashNumber", None)
         cheque_number = request.POST.get("chequeNumber", None)
         online_number = request.POST.get("onlineNumber", None)
+        card_number = request.POST.get("cardNumber", None)
 
         vendors_ids = request.POST["vendors"]
 
@@ -145,6 +146,7 @@ def accounting_form(request):
             cash_number=cash_number,
             cheque_number=cheque_number,
             online_number=online_number,
+            card_number=card_number,
             attachments=attachments,
         )
         new_entry.save()
@@ -226,6 +228,7 @@ def ufile(request):
             entry.cash_number = request.POST.get("cashNumber")
             entry.cheque_number = request.POST.get("chequeNumber")
             entry.online_number = request.POST.get("onlineNumber")
+            entry.card_number = request.POST.get("cardNumber")
             # entry.vendors.name = vendors_ids
 
             # Handle file uploads
@@ -251,13 +254,17 @@ def get_subheads(request):
 
 
 @login_required(login_url="signin")
-def summary(request):
-    today = date.today()
+def summary(request, selected_date):
+    selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+
+    today = selected_date
+
     todayentry = AccountingEntry.objects.filter(date=today)
     amount = 0
     cash = 0
     cheque = 0
     online = 0
+    card = 0
     xcount = 0
     bcount = 0
     item_counts = Counter()
@@ -267,12 +274,10 @@ def summary(request):
             cash = cash + 1
         elif i.instrument == "cheque":
             cheque = cheque + 1
+        elif i.instrument == "card":
+            card = card + 1
         else:
             online = online + 1
-        if i.charge_by == "xabta" or i.charge_by == "Xabta" or i.charge_by == "XABTA":
-            xcount = xcount + 1
-        elif i.charge_by == "bt" or i.charge_by == "Bt" or i.charge_by == "BT":
-            bcount = bcount + 1
 
     for j in todayentry:
         if (
