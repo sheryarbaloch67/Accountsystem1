@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Daily Summary</title>
     {% load static %}
     {% load humanize %}
@@ -57,37 +57,37 @@
               <div class="row">
                 <div class="col-md-12 text-left">
                   {% if logo == 'showboth' %}
-                    <div class="d-flex align-items-center justify-content-between col-md-7">
+                    <div class="d-flex align-items-center justify-content-between col-7">
                       <div>
                         <img src="{% static 'images/logos/logo2.png' %}" alt="Logo" class="me-3" style="max-height: 60px;" />
                         <img src="{% static 'images/logos/btfavicon1.png' %}" class="me-2" alt="Logo" style="max-height: 65px;" />
                       </div>
                       <div>
-                        <h3 class="card-title fw-semibold text-center mt-3" style="word-spacing: 2px;">Day's Summary</h3>
+                        <h3 class="card-title fw-semibold text-center mt-2" style="word-spacing: 2px;">Day's Summary</h3>
                       </div>
                     </div>
                   {% elif logo == 'showxabta' %}
-                    <div class="d-flex align-items-center justify-content-between col-md-7">
+                    <div class="d-flex align-items-center justify-content-between col-7">
                       <div>
                         <img src="{% static 'images/logos/logo2.png' %}" alt="Logo" style="max-height: 65px;" />
                       </div>
                       <div>
-                        <h3 class="card-title fw-semibold text-center mt-3" style="word-spacing: 2px;">Day's Summary</h3>
+                        <h3 class="card-title fw-semibold text-center mt-2" style="word-spacing: 2px;">Day's Summary</h3>
                       </div>
                     </div>
                   {% elif logo == 'showbt' %}
-                    <div class="d-flex align-items-center justify-content-between col-md-7">
+                    <div class="d-flex align-items-center justify-content-between col-7">
                       <div>
                         <img src="{% static 'images/logos/btfavicon1.png' %}" alt="Logo" style="max-height: 60px;" />
                       </div>
                       <div>
-                        <h3 class="card-title fw-semibold text-center mt-3" style="word-spacing: 2px;">Day's Summary</h3>
+                        <h3 class="card-title fw-semibold text-center mt-2" style="word-spacing: 2px;">Day's Summary</h3>
                       </div>
                     </div>
                   {% else %}
-                    <div class="d-flex align-items-center justify-content-center col-md-12">
+                    <div class="d-flex align-items-center justify-content-center col-12">
                       <div>
-                        <h3 class="card-title fw-semibold text-center mt-3" style="word-spacing: 2px;">Day's Summary</h3>
+                        <h3 class="card-title fw-semibold text-center mt-2" style="word-spacing: 2px;">Day's Summary</h3>
                       </div>
                     </div>
                   {% endif %}
