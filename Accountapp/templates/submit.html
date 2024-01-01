@@ -150,6 +150,13 @@
         margin: 0px !important;
         padding: 0px !important;
       }
+      
+      #datepicker {
+        position: relative;
+        top: 100%; /* Position below the button */
+        left: 0; /* Align with the button's left edge */
+        z-index: 1000;
+      }
       .hidden {
         display: none;
       }
@@ -222,11 +229,10 @@
                             <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots" style="font-size: 1rem;"></i></a>
                             <div class="actions dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
                               <div class="d-flex flex-column justify-content-left align-items-center">
-                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.9rem; border: none; width: 100%;"><i class="ti ti-download"></i> CSV</button>
-                                <a href="" class="btn btn-outline-primary d-block" style="font-size: 0.9rem; border: none;" id="summaryButton" onclick="showCustomSummary2()"><i class="ti ti-download"></i> Summary</a>
-                                <a href="#" class="btn btn-outline-primary d-block" style="font-size: 0.9rem; border: none;" id="cSummaryButton"><i class="ti ti-download"></i> Custom Summary</a>
-                                <input type="date" id="datepicker" style="display: none;" />
-                                
+                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;"><i class="ti ti-download"></i> CSV Table</button>
+                                <a href="" class="btn btn-outline-primary d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="summaryButton" onclick="showCustomSummary2()"><i class="ti ti-printer"></i> Today's Summary</a>
+                                <a href="#" class="btn btn-outline-primary d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="cSummaryButton" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-printer"></i> Custom Summary</a>
+                                <input aria-labelledby="cSummaryButton" type="date" id="datepicker" style="display: none;" />
                               </div>
                             </div>
                           </div>
@@ -593,102 +599,82 @@
         // Trigger the searchTable function to update the table based on the new date range
         searchTable()
       }
-
-
-
-
-
+      //Summary Scripts
       $(document).ready(function () {
-    // Initialize the datepicker
-    $('#datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-    });
-
-    // Show the datepicker when the "Custom Summary" button is clicked
-    $('#cSummaryButton').click(function () {
-      $('#datepicker').datepicker('show');
-    });
-
-    // Add an event listener for when a date is selected
-    $('#datepicker').on('changeDate', function (e) {
-      var selectedDate = e.format('yyyy-mm-dd');
-      var customSummaryUrl = `/summaryfile/${selectedDate}`;
-
-      // Set the href attribute of the anchor tag with the custom summary URL
-      $('#cSummaryButton').attr('href', customSummaryUrl);
-
-      // Trigger the click event on the anchor tag to open the summary page
-      $('#cSummaryButton')[0].click();
-
-      showCustomSummary(selectedDate);
-      $('#datepicker').datepicker('hide');
-    });
-
-    function showCustomSummary(selectedDate) {
-      // Get the CSRF token
-      var csrfToken = $('[name=csrfmiddlewaretoken]').val();
-
-      // AJAX request to trigger the custom summary action
-      $.ajax({
-        type: 'GET',
-        url: `/summaryfile/${selectedDate}/`,
-        headers: {
-          'X-CSRFToken': csrfToken
-        },
-        success: function (data) {
-          // Handle the success response, if needed
-          console.log('Custom summary success:', data);
-        },
-        error: function (error) {
-          // Handle the error response, if needed
-          console.error('Custom summary error:', error);
-        },
-      });
-    }
-  });
-
-    // Attach the showCustomSummary function to the button click event
-    document.getElementById('cSummaryButton').addEventListener('click', showCustomSummary);
-
-
-
-    function showCustomSummary2() {
-    // Get the current date
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-    const day = today.getDate().toString().padStart(2, '0');
-
-    // Format the current date as 'YYYY-MM-DD'
-    const currentDate = `${year}-${month}-${day}`;
-
-    var customSummaryUrl = `/summaryfile/${currentDate}`;
-    console.log(currentDate)
-
-    $('#summaryButton').attr('href', customSummaryUrl);
-
-// Trigger the click event on the anchor tag to open the summary page
-$('#summaryButton')[0].click();
-
-// showCustomSummary2(currentDate);
-    console.log("today date",currentDate)
-
-   
-}
-// Attach the showCustomSummary function to the button click event
-// document.getElementById('summaryButton').addEventListener('click', showCustomSummary2);
-
-
-
-
-
-     // Add this script to your HTML file
-    
-        // Function to handle the click on the Summary button
-
-
+        // Initialize the datepicker
+        $('#datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true,
+          todayHighlight: true
+        })
+      
+        // Show the datepicker when the "Custom Summary" button is clicked
+        $('#cSummaryButton').click(function () {
+          $('#datepicker').datepicker('show')
+        })
+      
+        // Add an event listener for when a date is selected
+        $('#datepicker').on('changeDate', function (e) {
+          var selectedDate = e.format('yyyy-mm-dd')
+          var customSummaryUrl = `/summaryfile/${selectedDate}`
+      
+          // Set the href attribute of the anchor tag with the custom summary URL
+          $('#cSummaryButton').attr('href', customSummaryUrl)
+      
+          // Trigger the click event on the anchor tag to open the summary page
+          $('#cSummaryButton')[0].click()
+      
+          showCustomSummary(selectedDate)
+          $('#datepicker').datepicker('hide')
+        })
+      
+        function showCustomSummary(selectedDate) {
+          // Get the CSRF token
+          var csrfToken = $('[name=csrfmiddlewaretoken]').val()
+      
+          // AJAX request to trigger the custom summary action
+          $.ajax({
+            type: 'GET',
+            url: `/summaryfile/${selectedDate}/`,
+            headers: {
+              'X-CSRFToken': csrfToken
+            },
+            success: function (data) {
+              // Handle the success response, if needed
+              console.log('Custom summary success:', data)
+            },
+            error: function (error) {
+              // Handle the error response, if needed
+              console.error('Custom summary error:', error)
+            }
+          })
+        }
+      })
+      
+      // Attach the showCustomSummary function to the button click event
+      document.getElementById('cSummaryButton').addEventListener('click', showCustomSummary)
+      
+      function showCustomSummary2() {
+        // Get the current date
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = (today.getMonth() + 1).toString().padStart(2, '0') // Months are zero-based
+        const day = today.getDate().toString().padStart(2, '0')
+      
+        // Format the current date as 'YYYY-MM-DD'
+        const currentDate = `${year}-${month}-${day}`
+      
+        var customSummaryUrl = `/summaryfile/${currentDate}`
+        console.log(currentDate)
+      
+        $('#summaryButton').attr('href', customSummaryUrl)
+      
+        // Trigger the click event on the anchor tag to open the summary page
+        $('#summaryButton')[0].click()
+      
+        // showCustomSummary2(currentDate);
+        console.log('today date', currentDate)
+      }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
