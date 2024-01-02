@@ -111,7 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# Set the time zone to Asia/Karachi for Pakistan Standard Time
+TIME_ZONE = "Asia/Karachi"
 
 USE_I18N = True
 

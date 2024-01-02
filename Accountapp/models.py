@@ -63,7 +63,9 @@ class Vendor(models.Model):
 
 class AccountingEntry(models.Model):
     date = models.DateField(auto_now_add=True)
+    Do = models.CharField(max_length=20,null=True, blank=True)
     amount = models.DecimalField(max_digits=20, decimal_places=2)
+    
     head = models.ForeignKey(Head, on_delete=models.CASCADE)
     sub_head = models.ForeignKey(Shead, on_delete=models.CASCADE)
     # sub_head = models.CharField(max_length=50)

@@ -27,6 +27,7 @@ urlpatterns = [
     path("submit/", views.accounting_form, name="accounting"),
     path("submitfile/", views.showresult, name="submitfile"),
     path("editfile/<int:id>", views.edit, name="editfile"),
+    path("printfile/<int:id>", views.print, name="printfile"),
     path("deletefile/<int:id>", views.deleterecord, name="deletefile"),
     path("updatefile", views.ufile, name="updatefile"),
     path("summaryfile/<str:selected_date>", views.summary, name="summaryfile"),

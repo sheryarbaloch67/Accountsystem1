@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Print Page</title>
+    {% load static %}
+    {% load humanize %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logos/favicon.png' %}" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      html {
+        background-color: #f2f2f2 !important;
+      }
+      
+      body {
+        background-color: #f2f2f2 !important;
+      }
+      
+      .main-card {
+        background-color: #fcfcfc !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
+      <!-- Main wrapper -->
+      <div class="body-wrapper">
+        <div class="container-fluid mt-4">
+          <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 text-left">                        
+                        {% if logo == 'xabta' %}
+                            <img src="{% static 'images/logos/logo2.png' %}" alt="Logo" style="max-height: 65px;" />
+                        {% elif logo == 'bt' %}
+                            <img src="{% static 'images/logos/btfavicon1.png' %}" alt="Logo" style="max-height: 60px;" />
+                        {% endif %}
+                        <hr class="mb-0" style="height: 1px;" />
+                    </div>
+                </div>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table text-nowrap mb-0">
+                      <tbody>
+                        <tr>
+                          <td>Date</td>
+                          <td>{{ data.date }}</td>
+                        </tr>
+                        <tr>
+                          <td>Amount</td>
+                          <td>{{ data.amount|floatformat:2|intcomma }} ( {{ amount_in_words }} )</td>
+                        </tr>
+                        <tr>
+                          <td>Reciept #</td>
+                          <td>{{ data.receipt_number }}</td>
+                        </tr>
+                        <tr>
+                          <td>Vendor / Service Provider</td>
+                          <td> {{data.vendors}} </td>
+                        </tr>
+                        <tr>
+                          <td>Instrument Type</td>
+                          <td>{{ data.instrument }}</td>
+                        </tr>
+                        <tr>
+                          <td>{{ data.instrument }} #</td>
+                            {% if data.instrument == 'cash' or data.instrument == 'Cash' %}
+                            <td class="instrument">{{ data.instrument }}-{{ data.cash_number }}</td>
+                            {% elif data.instrument == 'Cheque' or data.instrument == 'cheque' %}
+                            <td class="instrument">{{ data.instrument }}-{{ data.cheque_number }}</td>
+                            {% elif data.instrument == 'Card' or data.instrument == 'card' %}
+                            <td class="instrument">{{ data.instrument }}-{{ data.card_number }}</td>
+                            {% else %}
+                            <td class="instrument">{{ data.instrument }}-{{ data.online_number }}</td>
+                            {% endif %}
+                        </tr>
+                        {% if data.description %}
+                        <tr>
+                          <td>Description</td>
+                          <td>{{ data.description }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if data.comments %}
+                        <tr>
+                            <td>Comments</td>
+                            <td>{{ data.comments }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td>Reciever's Signature</td>
+                            <td>
+                                <div style="border-bottom: 1px solid grey; width: 200px; padding-top: 21px; margin-bottom: -5px;"></div>
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/app.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
+  </body>
+</html>

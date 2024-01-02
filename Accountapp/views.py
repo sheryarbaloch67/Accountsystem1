@@ -45,6 +45,7 @@ def signout(request):
 
 @login_required(login_url="signin")
 def home(request):
+    data = AccountingEntry.objects.all()
     heads = Head.objects.all()
     charges = charge.objects.all()
     paids = paid.objects.all()
@@ -52,6 +53,8 @@ def home(request):
     vendors = Vendor.objects.all()
     subheads = Shead.objects.all()
     today = date.today()
+
+    # ndate=str(today)+"-"+str(1)
     return render(request, "file.html", locals())
 
 
@@ -63,7 +66,7 @@ def accounting_form(request):
         amount = request.POST["amount"]
         sub_head = request.POST["subHead"]
         description = request.POST["description"]
-        receipt_number = request.POST["receiptNumber"]
+        receipt_number = request.POST.get("receiptNumber")
         charge_by = request.POST["chargeBy"]
         # voucher = request.POST['Voucher']
         paid_by = request.POST["paidBy"]
@@ -76,7 +79,25 @@ def accounting_form(request):
         online_number = request.POST.get("onlineNumber", None)
         card_number = request.POST.get("cardNumber", None)
 
+        user = request.user
+        user = str(user)
+
         vendors_ids = request.POST["vendors"]
+
+        today = date.today()
+        today2 = str(today).split("-")
+        today2 = today2[0] + today2[1] + today2[2]
+
+        data = AccountingEntry.objects.filter(date=today)
+
+        if instrument == "cash" or instrument == "Cash":
+            count = 0
+            for i in data:
+                if i.instrument == "cash" or i.instrument == "Cash":
+                    count = count + 1
+            count = count + 1
+
+            count = str(today2) + "-" + str(count)
 
         # Handle file uploads
         attachments = request.FILES.get("attachments", None)
@@ -143,11 +164,12 @@ def accounting_form(request):
             comments=comments,
             vendors=vendors_ids,
             instrument=instrument,
-            cash_number=cash_number,
+            cash_number=count,
             cheque_number=cheque_number,
             online_number=online_number,
             card_number=card_number,
             attachments=attachments,
+            Do=user,
         )
         new_entry.save()
 
@@ -167,6 +189,27 @@ def edit(request, id):
     vendors = Vendor.objects.all()
 
     return render(request, "editfile.html", locals())
+
+
+@login_required(login_url="signin")
+def print(request, id):
+    data = AccountingEntry.objects.get(id=id)
+    p = inflect.engine()
+    amount_in_words = p.number_to_words(int(data.amount)).title() + " Rupees"
+    if (
+        str(data.charge_by) == "xabta"
+        or str(data.charge_by) == "Xabta"
+        or str(data.charge_by) == "XABTA"
+    ):
+        logo = "xabta"
+    elif (
+        str(data.charge_by) == "bt"
+        or str(data.charge_by) == "Bt"
+        or str(data.charge_by) == "BT"
+    ):
+        logo = "bt"
+
+    return render(request, "print.html", locals())
 
 
 @login_required(login_url="signin")
@@ -225,14 +268,29 @@ def ufile(request):
             entry.vendors = vendors_ids
 
             entry.instrument = request.POST.get("instrument")
-            entry.cash_number = request.POST.get("cashNumber")
             entry.cheque_number = request.POST.get("chequeNumber")
             entry.online_number = request.POST.get("onlineNumber")
             entry.card_number = request.POST.get("cardNumber")
-            # entry.vendors.name = vendors_ids
 
-            # Handle file uploads
-            entry.attachments = request.FILES.get("attachments")
+            today = date.today()
+            today2 = str(today).split("-")
+            today2 = today2[0] + today2[1] + today2[2]
+            data = AccountingEntry.objects.filter(date=today)
+            if entry.instrument == "cash" or entry.instrument == "Cash":
+                count = 0
+                for i in data:
+                    if i.instrument == "cash" or i.instrument == "Cash":
+                        count = count + 1
+            count = count + 1
+
+            count = str(today2) + "-" + str(count)
+            entry.cash_number = count
+
+            if "attachments" in request.FILES:
+                entry.attachments = request.FILES["attachments"]
+            else:
+                current_attachment_url = request.POST.get("current_attachment")
+                entry.attachments = current_attachment_url
 
             # Other fields...
 
@@ -258,6 +316,11 @@ def summary(request, selected_date):
     selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
 
     today = selected_date
+    ndate = str(today)
+    ndate = ndate.split("-")
+    ndate = ndate[0] + ndate[1] + ndate[2]
+    date_object = datetime.strptime(ndate, "%Y%m%d")
+    formatted_date = date_object.strftime("%Y%b%d").title()
 
     todayentry = AccountingEntry.objects.filter(date=today)
     amount = 0
@@ -281,15 +344,15 @@ def summary(request, selected_date):
 
     for j in todayentry:
         if (
-            str(j.charge_by) == "xabta"
-            or str(j.charge_by) == "Xabta"
-            or str(j.charge_by) == "XABTA"
+            str(data.charge_by) == "xabta"
+            or str(data.charge_by) == "Xabta"
+            or str(data.charge_by) == "XABTA"
         ):
             xcount = xcount + 1
         elif (
-            str(j.charge_by) == "bt"
-            or str(j.charge_by) == "Bt"
-            or str(j.charge_by) == "BT"
+            str(data.charge_by) == "bt"
+            or str(data.charge_by) == "Bt"
+            or str(data.charge_by) == "BT"
         ):
             bcount = bcount + 1
 
@@ -323,7 +386,7 @@ def tsummary(request):
 
 @login_required(login_url="signin")
 def showresult(request):
-    user = request.user
+    admin = request.user.is_staff
     accounting_form = AccountingEntry.objects.all().order_by("-id")
     # for i in accounting_form:
     #     print(i.date)

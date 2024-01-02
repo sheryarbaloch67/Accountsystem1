@@ -160,6 +160,20 @@
       .hidden {
         display: none;
       }
+      
+      .datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom {
+        position: absolute !important;
+        top: 30% !important;
+        left: 70% !important;
+      }
+      
+      @media only screen and (max-width: 768px) {
+        .datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom {
+          position: absolute !important;
+          top: 40% !important;
+          left: 20% !important;
+        }
+      }
     </style>
   </head>
 
@@ -261,13 +275,15 @@
                         <td class="vendor">{{ entry.vendors }}</td>
                         <td>
                           <button class="text-primary accordion-toggle" data-target="#details{{ entry.id }}" style="background-color: transparent; border: none; padding: 0;"><i class="ti ti-chevron-down" style="font-size: 1.1rem;"></i></button>
-                          {% if entry.date == today %}
+
+                          {% if entry.date == today or admin %}
                             <a href="{% url 'editfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></a>
                             <a href="{% url 'deletefile' entry.id %}" class="delete-button text-nowrap text-primary" onclick="return confirm('Are you sure you want to delete this entry?');"><i class="ti ti-trash" style="font-size: 1.1rem;"></i></a>
                           {% else %}
                             <span class="edit-button disabled text-nowrap text-primary"><i class="ti ti-edit" style="font-size: 1.1rem;"></i></span>
                             <span class="delete-button disabled text-nowrap text-primary"><i class="ti ti-trash" style="font-size: 1.1rem;"></i></span>
                           {% endif %}
+                          <a href="{% url 'printfile' entry.id %}" class="edit-button text-nowrap text-primary"><i class="ti ti-printer" style="font-size: 1.1rem;"></i></a>
                         </td>
                       </tr>
                       <tr class="hiddenDetails text-left" id="details{{ entry.id }}">
@@ -313,6 +329,17 @@
                             </div>
                             <div class="col-md-9">{{ entry.description }}</div>
                           </div>
+
+                          <div class="row">
+                            <div class="col-md-2 mb-1">
+                              <strong>Attachment:</strong>
+                            </div>
+                            {% if entry.attachments %}
+                              <div class="col-md-9">
+                                <a href="{{ entry.attachments.url }}" target="_blank" name="files">{{ entry.attachments }}</a>
+                              </div>
+                            {% endif %}
+                          </div>
                         </td>
                       </tr>
                     {% endfor %}
@@ -353,6 +380,7 @@
           <th>Claim By</th>
           <th>Instrument</th>
           <th>Vendor</th>
+          <th>Entered By</th>
           <th>Comments</th>
           <th>Description</th>
         </tr>
@@ -379,6 +407,7 @@
               <td>{{ entry.instrument }}-{{ entry.online_number }}</td>
             {% endif %}
             <td>{{ entry.vendors }}</td>
+            <td>{{ entry.Do }}</td>
             <td>{{ entry.comments }}</td>
             <td>{{ entry.description }}</td>
           </tr>
@@ -599,6 +628,32 @@
         // Trigger the searchTable function to update the table based on the new date range
         searchTable()
       }
+      
+      function searchTabledate() {
+        var startDateInput = document.getElementById('dateInput')
+        var endDateInput = document.getElementById('endDate')
+        var startFilter = new Date(startDateInput.value)
+        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000) // Add 24 hours to include the entire selected end date
+      
+        var table = document.getElementById('accounting-table')
+        var tr = table.getElementsByTagName('tr')
+      
+        for (var i = 0; i < tr.length; i++) {
+          var dateTd = tr[i].getElementsByTagName('td')[0]
+      
+          if (dateTd) {
+            var dateValue = new Date(dateTd.textContent.trim())
+      
+            // Check if the date is within the selected range
+            if ((isNaN(startFilter) || dateValue >= startFilter) && (isNaN(endFilter) || dateValue <= endFilter)) {
+              tr[i].style.display = ''
+            } else {
+              tr[i].style.display = 'none'
+            }
+          }
+        }
+      }
+      
       //Summary Scripts
       $(document).ready(function () {
         // Initialize the datepicker
