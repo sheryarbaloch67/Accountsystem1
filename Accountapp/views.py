@@ -344,15 +344,15 @@ def summary(request, selected_date):
 
     for j in todayentry:
         if (
-            str(data.charge_by) == "xabta"
-            or str(data.charge_by) == "Xabta"
-            or str(data.charge_by) == "XABTA"
+            str(j.charge_by) == "xabta"
+            or str(j.charge_by) == "Xabta"
+            or str(j.charge_by) == "XABTA"
         ):
             xcount = xcount + 1
         elif (
-            str(data.charge_by) == "bt"
-            or str(data.charge_by) == "Bt"
-            or str(data.charge_by) == "BT"
+            str(j.charge_by) == "bt"
+            or str(j.charge_by) == "Bt"
+            or str(j.charge_by) == "BT"
         ):
             bcount = bcount + 1
 
