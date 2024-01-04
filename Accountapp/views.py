@@ -277,6 +277,7 @@ def ufile(request):
             today2 = str(today).split("-")
             today2 = today2[0] + today2[1] + today2[2]
 
+            count = 0
             if str(iscash) != "cash":
                 data = AccountingEntry.objects.filter(date=today)
                 if entry.instrument == "cash" or entry.instrument == "Cash":

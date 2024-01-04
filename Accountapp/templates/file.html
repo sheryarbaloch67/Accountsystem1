@@ -24,7 +24,7 @@
     </style>
   </head>
 
-  <body>
+  <body onload="toggleReceiptField()">
     <!-- Body Wrapper -->
     <div class="page-wrapper" id="main-wrapper" data-layout="horizontal" data-navbarbg="skin6" data-header-position="fixed">
       <!-- Main wrapper -->
@@ -50,7 +50,7 @@
                             <div class="d-flex align-items-center">
                               <label class="form-label me-2">Receipt # *</label>
                               <div class="form-check form-switch mb-2">
-                                <input class="form-check-input" type="checkbox" id="receiptToggle" onclick="toggleReceiptField()" checked required />
+                                <input class="form-check-input" type="checkbox" id="receiptToggle" onclick="toggleReceiptField()" checked />
                               </div>
                             </div>
                             <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid Receipt #" required readonly />
@@ -319,7 +319,6 @@
           }
         })
       })
-      document.onload(toggleReceiptField())
       
       // Add the following function to handle radio button selection
       function toggleReceiptField() {
