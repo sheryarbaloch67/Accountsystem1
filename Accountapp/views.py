@@ -89,9 +89,8 @@ def accounting_form(request):
         today2 = today2[0] + today2[1] + today2[2]
 
         data = AccountingEntry.objects.filter(date=today)
-
+        count = 0
         if instrument == "cash" or instrument == "Cash":
-            count = 0
             for i in data:
                 if i.instrument == "cash" or i.instrument == "Cash":
                     count = count + 1
@@ -192,7 +191,7 @@ def edit(request, id):
 
 
 @login_required(login_url="signin")
-def print(request, id):
+def printer(request, id):
     data = AccountingEntry.objects.get(id=id)
     p = inflect.engine()
     amount_in_words = p.number_to_words(int(data.amount)).title() + " Rupees"
@@ -267,6 +266,7 @@ def ufile(request):
 
             entry.vendors = vendors_ids
 
+            iscash = entry.instrument
             entry.instrument = request.POST.get("instrument")
             entry.cheque_number = request.POST.get("chequeNumber")
             entry.online_number = request.POST.get("onlineNumber")
@@ -275,16 +275,18 @@ def ufile(request):
             today = date.today()
             today2 = str(today).split("-")
             today2 = today2[0] + today2[1] + today2[2]
-            data = AccountingEntry.objects.filter(date=today)
-            if entry.instrument == "cash" or entry.instrument == "Cash":
-                count = 0
-                for i in data:
-                    if i.instrument == "cash" or i.instrument == "Cash":
-                        count = count + 1
-            count = count + 1
 
-            count = str(today2) + "-" + str(count)
-            entry.cash_number = count
+            if str(iscash) != "cash":
+                data = AccountingEntry.objects.filter(date=today)
+                if entry.instrument == "cash" or entry.instrument == "Cash":
+                    count = 0
+                    for i in data:
+                        if i.instrument == "cash" or i.instrument == "Cash":
+                            count = count + 1
+                count = count + 1
+
+                count = str(today2) + "-" + str(count)
+                entry.cash_number = count
 
             if "attachments" in request.FILES:
                 entry.attachments = request.FILES["attachments"]
