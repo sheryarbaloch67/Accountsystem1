@@ -187,7 +187,7 @@
       document.getElementById('amount').addEventListener('input', function (event) {
         formatCurrency(event.target)
       })
-      document.onload(toggleReceiptField())
+      
       function formatCurrency(inputField) {
         let inputValue = inputField.value.replace(/[^\d]/g, '') // Remove non-numeric characters
         inputField.value = inputValue
@@ -319,6 +319,7 @@
           }
         })
       })
+      document.onload(toggleReceiptField())
       
       // Add the following function to handle radio button selection
       function toggleReceiptField() {
