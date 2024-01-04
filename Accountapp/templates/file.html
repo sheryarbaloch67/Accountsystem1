@@ -47,16 +47,13 @@
                           </div>
 
                           <div class="mb-3 col-md-6">
-                            <label class="form-label">Receipt Number*</label>
-                            <div class="form-check form-check-inline ms-2">
-                              <input class="form-check-input" type="radio" name="receiptOption" id="receiptYes" value="yes" onclick="toggleReceiptField()" required />
-                              <label class="form-check-label" for="receiptYes">Yes</label>
+                            <div class="d-flex align-items-center">
+                              <label class="form-label me-2">Receipt # *</label>
+                              <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="receiptToggle" onclick="toggleReceiptField()" checked required />
+                              </div>
                             </div>
-                            <div class="form-check form-check-inline">
-                              <input class="form-check-input" type="radio" name="receiptOption" id="receiptNo" value="no" onclick="toggleReceiptField()" required />
-                              <label class="form-check-label" for="receiptNo">No</label>
-                            </div>
-                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid Receipt#" required readonly />
+                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" placeholder="Enter a valid Receipt #" required readonly />
                           </div>
 
                           <div class="mb-3 col-md-6">
@@ -190,6 +187,7 @@
       document.getElementById('amount').addEventListener('input', function (event) {
         formatCurrency(event.target)
       })
+      document.onload(toggleReceiptField())
       function formatCurrency(inputField) {
         let inputValue = inputField.value.replace(/[^\d]/g, '') // Remove non-numeric characters
         inputField.value = inputValue
@@ -324,17 +322,21 @@
       
       // Add the following function to handle radio button selection
       function toggleReceiptField() {
-        var receiptOptionYes = document.getElementById('receiptYes').checked
+        var receiptToggle = document.getElementById('receiptToggle')
         var receiptNumberField = document.getElementById('receiptNumber')
+        var commentsLabel = document.querySelector('label[for="comments"]')
         var commentsField = document.getElementById('comments')
       
-        if (receiptOptionYes) {
+        if (receiptToggle.checked) {
+          receiptNumberField.value = '' // Clear the input field
           receiptNumberField.removeAttribute('readonly')
           commentsField.removeAttribute('required')
+          commentsLabel.textContent = 'Comments'
         } else {
           receiptNumberField.value = 'N/A'
           receiptNumberField.setAttribute('readonly', 'readonly')
           commentsField.setAttribute('required', 'required')
+          commentsLabel.textContent = 'Comments*'
         }
       }
       

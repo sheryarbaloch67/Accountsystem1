@@ -194,6 +194,7 @@ def edit(request, id):
 def printer(request, id):
     data = AccountingEntry.objects.get(id=id)
     p = inflect.engine()
+    instruments = str(data.instrument).title()
     amount_in_words = p.number_to_words(int(data.amount)).title() + " Rupees"
     if (
         str(data.charge_by) == "xabta"

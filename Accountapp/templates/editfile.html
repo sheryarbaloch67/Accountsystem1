@@ -46,10 +46,15 @@
                             <input type="text" class="form-control" id="amount" name="amount" value="{{ data.amount }}" required />
                             <input type="text" class="form-control" id="userid" name="userid" hidden value="{{ data.id }}" />
                         </div>
-                
+
                         <div class="mb-3 col-md-6">
-                            <label for="receiptNumber" class="form-label">Receipt#*</label>
-                            <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" value="{{ data.receipt_number }}" required />
+                          <div class="d-flex align-items-center">
+                            <label class="form-label me-2">Receipt # *</label>
+                            <div class="form-check form-switch mb-2">
+                              <input class="form-check-input" type="checkbox" id="receiptToggle" onclick="toggleReceiptField()" checked required />
+                            </div>
+                          </div>
+                          <input class="form-control" type="text" id="receiptNumber" name="receiptNumber" value="{{ data.receipt_number }}" placeholder="Enter a valid Receipt #" required readonly />
                         </div>
                 
                         <div class="mb-3 col-md-6">
@@ -297,6 +302,37 @@
           }
         }
       }
+
+      // Add the following function to handle radio button selection
+      function toggleReceiptField() {
+        var receiptToggle = document.getElementById('receiptToggle')
+        var receiptNumberField = document.getElementById('receiptNumber')
+        var commentsLabel = document.querySelector('label[for="comments"]')
+        var commentsField = document.getElementById('comments')
+      
+        if (receiptToggle.checked) {
+          receiptNumberField.value = '' // Clear the input field
+          receiptNumberField.removeAttribute('readonly')
+          commentsField.removeAttribute('required')
+          commentsLabel.textContent = 'Comments'
+        } else {
+          receiptNumberField.value = 'N/A'
+          receiptNumberField.setAttribute('readonly', 'readonly')
+          commentsField.setAttribute('required', 'required')
+          commentsLabel.textContent = 'Comments*'
+        }
+      }
+      
+      // Modify the existing comment field change event to make it required
+      $('#comments').on('change', function () {
+        var commentsValue = $(this).val()
+        var receiptOptionNo = document.getElementById('receiptNo').checked
+      
+        if (!commentsValue.trim() && receiptOptionNo) {
+          alert('Comments are required when Receipt Option is "No".')
+          $(this).focus() // Optionally, focus on the comments field
+        }
+      })
 
 
       $(document).ready(function () {

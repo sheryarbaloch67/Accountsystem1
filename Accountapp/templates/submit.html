@@ -167,11 +167,24 @@
         left: 70% !important;
       }
       
+      .left-logo,
+      .right-logo {
+        margin-right: 16px;
+      }
+      
       @media only screen and (max-width: 768px) {
         .datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom {
           position: absolute !important;
           top: 40% !important;
           left: 20% !important;
+        }
+        .left-logo {
+          margin-right: 8px;
+          height: 25px;
+        }
+        .right-logo {
+          margin-right: 8px;
+          height: 20px;
         }
       }
     </style>
@@ -189,8 +202,8 @@
                 <h4 class="m-0" style="word-spacing: 3px;">Hello <span class="text-primary">{{ user.first_name }}</span></h4>
               </div>
               <div class="d-flex align-items-center justify-content-end">
-                <img src="{% static 'images/logos/btfavicon1.png' %}" height="35" class="me-3" />
-                <img src="{% static 'images/logos/logo1.png' %}" height="30" class="me-3" />
+                <img src="{% static 'images/logos/btfavicon1.png' %}" height="35" class="left-logo" />
+                <img src="{% static 'images/logos/logo1.png' %}" height="30" class="right-logo" />
                 <a class="" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false"><img src="{% static 'images/profile/user-1.jpg' %}" alt="" width="35" height="35" class="rounded-circle" /></a>
                 <div class="logout dropdown-menu dropdown-menu-end" aria-labelledby="drop2">
                   <div class="message-body">
@@ -203,7 +216,7 @@
         </div>
         <div class="container-fluid d-flex justify-content-between align-items-center pt-0 pb-0 mb-0 mt-0">
           <div class="ms-4">
-            <input type="date" id="dateInput" oninput="searchTabledate()" class="date-input me-2 mb-2" placeholder="Select start date" />
+            <input type="date" id="dateInput" class="date-input me-2 mb-2" placeholder="Select start date" />
             <input type="date" id="endDate" class="date-input" oninput="searchTabledate()" />
           </div>
           <div class="me-4">
@@ -540,31 +553,6 @@
         }
       }
       
-      function searchTabledate() {
-        var startDateInput = document.getElementById('dateInput')
-        var endDateInput = document.getElementById('endDate')
-        var startFilter = new Date(startDateInput.value)
-        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400) // Add 24 hours to include the entire selected end date
-      
-        var table = document.getElementById('accounting-table')
-        var tr = table.getElementsByTagName('tr')
-      
-        for (var i = 0; i < tr.length; i++) {
-          var dateTd = tr[i].getElementsByTagName('td')[0]
-      
-          if (dateTd) {
-            var dateValue = new Date(dateTd.textContent.trim())
-      
-            // Check if the date is within the selected range
-            if ((isNaN(startFilter) || dateValue >= startFilter) && (isNaN(endFilter) || dateValue <= endFilter)) {
-              tr[i].style.display = ''
-            } else {
-              tr[i].style.display = 'none'
-            }
-          }
-        }
-      }
-      
       function searchTableByColumn(inputElement) {
         var filter = inputElement.value.toUpperCase()
         var columnIndex = getColumnIndex(inputElement.id.replace('Input', ''))
@@ -601,39 +589,14 @@
         return columnMap[columnName]
       }
       
-      function updateSearchInputWithDate() {
-        var startDateInput = document.getElementById('dateInput')
-        var endDateInput = document.getElementById('endDate')
-      
-        var startDate = new Date(startDateInput.value)
-        startDate.setUTCHours(0, 0, 0, 0)
-      
-        // Set the min attribute of the end date input to the selected start date
-        endDateInput.endD
-        min = startDate.toISOString().split('T')[0]
-      
-        // Trigger the searchTable function to update the table based on the new date range
-      
-        searchTable()
-      }
-      
-      function updateEndDate() {
-        // Get the selected start date from the input
-        var startDateInput = document.getElementById('dateInput')
-        var startDate = new Date(startDateInput.value)
-      
-        // Set the min attribute of the end date input to the selected start date
-        document.getElementById('endDate').min = startDate.toISOString().split('T')[0]
-      
-        // Trigger the searchTable function to update the table based on the new date range
-        searchTable()
-      }
-      
       function searchTabledate() {
         var startDateInput = document.getElementById('dateInput')
         var endDateInput = document.getElementById('endDate')
         var startFilter = new Date(startDateInput.value)
-        var endFilter = new Date(endDateInput.valueAsDate.getTime() + 86400000) // Add 24 hours to include the entire selected end date
+        var endFilter = new Date(endDateInput.valueAsDate)
+      
+        // Set the time to the end of the day (23:59:59)
+        endFilter.setHours(23, 59, 59, 999)
       
         var table = document.getElementById('accounting-table')
         var tr = table.getElementsByTagName('tr')
@@ -643,6 +606,9 @@
       
           if (dateTd) {
             var dateValue = new Date(dateTd.textContent.trim())
+      
+            // Set the time to the end of the day for comparison
+            dateValue.setHours(23, 59, 59, 999)
       
             // Check if the date is within the selected range
             if ((isNaN(startFilter) || dateValue >= startFilter) && (isNaN(endFilter) || dateValue <= endFilter)) {
