@@ -151,6 +151,10 @@
         padding: 0px !important;
       }
       
+      .actions.dropdown-menu {
+        margin: 7px -50px 0px 40px !important;
+      }
+      
       #datepicker {
         position: relative;
         top: 100%; /* Position below the button */
@@ -253,12 +257,12 @@
                       <th>
                         <div class="d-flex justify-content-center">
                           <div>
-                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots" style="font-size: 1rem;"></i></a>
+                            <a class="nav-icon-hover text-primary" href="javascript:void(0)" id="drop3" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-menu-2" style="font-size: 1rem;"></i></a>
                             <div class="actions dropdown-menu dropdown-menu-end" aria-labelledby="drop3">
                               <div class="d-flex flex-column justify-content-left align-items-center">
-                                <button onclick="downloadTable()" class="btn btn-outline-primary" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;"><i class="ti ti-download"></i> CSV Table</button>
-                                <a href="" class="btn btn-outline-primary d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="summaryButton" onclick="showCustomSummary2()"><i class="ti ti-printer"></i> Today's Summary</a>
-                                <a href="#" class="btn btn-outline-primary d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="cSummaryButton"><i class="ti ti-printer"></i> Custom Summary</a>
+                                <button onclick="downloadTable()" class="btn btn-light" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;"><i class="ti ti-download"></i> CSV Table</button>
+                                <a href="" class="btn btn-light d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="summaryButton" onclick="showCustomSummary2()"><i class="ti ti-printer"></i> Today's Summary</a>
+                                <a href="" class="btn btn-light d-block" style="font-size: 0.8rem; border: none; width: 100%; text-align: left;" id="cSummaryButton"><i class="ti ti-printer"></i> Custom Summary</a>
                                 <input type="date" id="datepicker" style="display: none;" />
                               </div>
                             </div>
@@ -329,30 +333,36 @@
                             <div class="col-md-9">{{ entry.vendors }}</div>
                           </div>
 
-                          <div class="row">
-                            <div class="col-md-2 mb-1">
-                              <strong>Comments:</strong>
-                            </div>
-                            <div class="col-md-9">{{ entry.comments }}</div>
-                          </div>
-
-                          <div class="row">
-                            <div class="col-md-2 mb-1">
-                              <strong>Description:</strong>
-                            </div>
-                            <div class="col-md-9">{{ entry.description }}</div>
-                          </div>
-
-                          <div class="row">
-                            <div class="col-md-2 mb-1">
-                              <strong>Attachment:</strong>
-                            </div>
-                            {% if entry.attachments %}
-                              <div class="col-md-9">
-                                <a href="{{ entry.attachments.url }}" target="_blank" name="files">{{ entry.attachments }}</a>
+                          {% if entry.comments %}
+                            <div class="row">
+                              <div class="col-md-2 mb-1">
+                                <strong>Comments:</strong>
                               </div>
-                            {% endif %}
-                          </div>
+                              <div class="col-md-9">{{ entry.comments }}</div>
+                            </div>
+                          {% endif %}
+
+                          {% if entry.description %}
+                            <div class="row">
+                              <div class="col-md-2 mb-1">
+                                <strong>Description:</strong>
+                              </div>
+                              <div class="col-md-9">{{ entry.description }}</div>
+                            </div>
+                          {% endif %}
+
+                          {% if entry.attachments %}
+                            <div class="row">
+                              <div class="col-md-2 mb-1">
+                                <strong>Attachment:</strong>
+                              </div>
+                              {% if entry.attachments %}
+                                <div class="col-md-9">
+                                  <a href="{{ entry.attachments.url }}" target="_blank" name="files">{{ entry.attachments }}</a>
+                                </div>
+                              {% endif %}
+                            </div>
+                          {% endif %}
                         </td>
                       </tr>
                     {% endfor %}
